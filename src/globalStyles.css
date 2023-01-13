@@ -1,0 +1,9 @@
+body {
+  margin: 0;
+}
+
+.ant-layout-content,
+.ant-pro-layout-content {
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+}
