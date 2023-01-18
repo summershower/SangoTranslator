@@ -1,21 +1,32 @@
 import { useEffect, useRef } from 'react';
 import options from './options';
 import { initDB, read } from 'utils/indexDB';
-const NotEditableSheet: React.FC = () => {
+const NotEditableSheet: React.FC<{
+  setIsLoadedSheet: (status: boolean) => void;
+  formatSheet: (index?: string) => void;
+}> = ({ setIsLoadedSheet, formatSheet }) => {
   const containerRef = useRef<HTMLDivElement | null>(null); // 表格容器DOM
+  const hook = {
+    // 切换表格钩子函数，触发重新格式化代码操作
+    sheetActivate(index: string) {
+      formatSheet(index);
+    },
+  };
   useEffect(() => {
     initDB()
       .then(() => {
         // 读取数据库内容，初始化表格
-        const optionsCopy: any = { ...options };
+        const optionsCopy: any = { ...options, hook };
         read().then((res) => {
-          if (res) optionsCopy.data = res;
+          if (res) {
+            optionsCopy.data = res;
+          }
           window.luckysheet.create(optionsCopy);
+          setIsLoadedSheet(true);
         });
       })
       .catch(() => {
-        // 数据库读取失败，使用空表格初始化
-        window.luckysheet.create(options);
+        alert('failed');
       });
   }, []);
 

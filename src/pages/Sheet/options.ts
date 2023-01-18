@@ -80,8 +80,13 @@ export default {
     zoom: true, // 缩放
   },
   hook: {
-    updated: () => {
+    updated() {
       modify(window.luckysheet.getAllSheets());
+    },
+    sheetActivate() {
+      setTimeout(() => {
+        modify(window.luckysheet.getAllSheets());
+      }, 0);
     },
   },
 };

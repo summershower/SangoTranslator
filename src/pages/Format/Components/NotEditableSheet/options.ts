@@ -7,6 +7,7 @@ export default {
   enableAddRow: false,
   sheetFormulaBar: false,
   allowUpdate: false,
+  allowEdit: false,
   showstatisticBarConfig: {
     count: false, // 计数栏
     view: false, // 打印视图

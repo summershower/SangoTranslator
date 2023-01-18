@@ -15,9 +15,11 @@
     "@ant-design/pro-components": "^2.0.1",
     "@umijs/max": "^4.0.42",
     "ahooks": "^3.7.4",
-    "antd": "^5.0.0"
+    "antd": "^5.0.0",
+    "js-beautify": "^1.14.7"
   },
   "devDependencies": {
+    "@types/js-beautify": "^1.13.3",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "eslint": "^8.31.0",
