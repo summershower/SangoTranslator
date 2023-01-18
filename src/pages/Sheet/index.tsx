@@ -1,15 +1,29 @@
-import { Workbook } from '@fortune-sheet/react';
-import '@fortune-sheet/react/dist/index.css';
-import styles from './index.less';
 import { useEffect, useState, useRef } from 'react';
 import { usePrevious } from 'ahooks';
-import { flushSync } from 'react-dom';
-
+import options from './options';
+import { initDB, read } from 'utils/indexDB';
 const Sheet: React.FC = () => {
   const [width, setWidth] = useState(0); // 表格容器宽度
   const [headerHeight, setHeaderHeight] = useState(0); // 表格头高度
-  const [refreshFlag, setRefreshFlag] = useState(true); // 用于触发刷新的标记
   const containerRef = useRef<HTMLDivElement | null>(null); // 表格容器DOM
+
+  function initSheet() {
+    // 初始化indexDB仓库
+    initDB()
+      .then(() => {
+        // 读取数据库内容，初始化表格
+        const optionsCopy = { ...options };
+        console.log(optionsCopy);
+        read().then((res) => {
+          if (res) optionsCopy.data = res;
+          window.luckysheet.create(optionsCopy);
+        });
+      })
+      .catch(() => {
+        // 数据库读取失败，使用空表格初始化
+        window.luckysheet.create(options);
+      });
+  }
   useEffect(() => {
     // 监听页面尺寸变化
     const timer = setInterval(() => {
@@ -19,38 +33,37 @@ const Sheet: React.FC = () => {
       if (width) setWidth(width);
       setHeaderHeight(height);
     }, 300);
-    // 阻止表格容器右键点击事件
-    containerRef.current?.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-    });
-    return () => clearInterval(timer);
+    // 清除antd默认padding
+    const layout = document.querySelector('.ant-pro-layout-content');
+    layout?.classList.add('noPadding');
+    initSheet();
+    return () => {
+      clearInterval(timer);
+      layout?.classList.remove('noPadding');
+    };
   }, []);
 
   const previousWidth = usePrevious(width);
   const previousHeight = usePrevious(headerHeight);
   // 表格容器尺寸改变，重新渲染表格
   useEffect(() => {
-    console.log(previousHeight);
     if (
       (previousWidth && previousWidth !== width) ||
-      previousHeight !== headerHeight
+      (previousHeight !== undefined && previousHeight !== headerHeight)
     ) {
-      setRefreshFlag(false);
-      flushSync(() => {
-        setTimeout(() => {
-          setRefreshFlag(true);
-        }, 0);
-      });
+      initSheet();
     }
   }, [width, headerHeight]);
+
   return (
     <div
-      className={styles.container}
-      style={{ height: !headerHeight ? '100vh' : 'calc(100vh - 56px)' }}
+      style={{
+        width: '100%',
+        height: !headerHeight ? '100vh' : 'calc(100vh - 56px)',
+      }}
+      id="sheetContainer"
       ref={containerRef}
-    >
-      {refreshFlag ? <Workbook data={[{ name: 'Sheet1' }]}></Workbook> : <></>}
-    </div>
+    ></div>
   );
 };
 export default Sheet;

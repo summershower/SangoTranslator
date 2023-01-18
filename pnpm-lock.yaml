@@ -3,7 +3,6 @@ lockfileVersion: 5.4
 specifiers:
   '@ant-design/icons': ^4.7.0
   '@ant-design/pro-components': ^2.0.1
-  '@fortune-sheet/react': 0.12.4-beta.0
   '@types/react': ^18.0.0
   '@types/react-dom': ^18.0.0
   '@umijs/max': ^4.0.42
@@ -21,7 +20,6 @@ specifiers:
 dependencies:
   '@ant-design/icons': 4.8.0
   '@ant-design/pro-components': 2.3.52_antd@5.1.4
-  '@fortune-sheet/react': 0.12.4-beta.0
   '@umijs/max': 4.0.42_yyqe4hqov3x6xcxgchllpcnrhq
   ahooks: 3.7.4
   antd: 5.1.4
@@ -2438,43 +2436,6 @@ packages:
     deprecated: the package is rather renamed to @formatjs/ecma-abstract with some changes in functionality (primarily selectUnit is removed and we don't plan to make any further changes to this package
     dev: false
 
-  /@formulajs/formulajs/2.9.3:
-    resolution: {integrity: sha512-WpgiuJaBl/Hcda9Ti8a7mlnw/vUZkJrtjABvojz6P6mo6d8EscudyA7iAt/kTLsgi0c8zfmzQd/Yjb4ASFkw+g==}
-    hasBin: true
-    dependencies:
-      bessel: 1.0.2
-      jstat: 1.9.6
-    dev: false
-
-  /@fortune-sheet/core/0.12.4-beta.0:
-    resolution: {integrity: sha512-edywF9q+dpfOMifCiCOgxcvVeT6RQmtLUn0hZ89Z1L6bDFG7a+c4VjUKx77pXled601o+rnnAPhSoN4+FItOeg==}
-    dependencies:
-      '@fortune-sheet/formula-parser': 0.2.5
-      dayjs: 1.11.7
-      immer: 9.0.17
-      lodash: 4.17.21
-      numeral: 2.0.6
-      uuid: 8.3.2
-    dev: false
-
-  /@fortune-sheet/formula-parser/0.2.5:
-    resolution: {integrity: sha512-DERnYVX9CzmszjfV0LwinuLVSy63KSF5u/KMKW8EuUpFKVDPc6Lkb3JP089vzEMC2OVx2To2uUTNTnFjBI9Gsw==}
-    dependencies:
-      '@formulajs/formulajs': 2.9.3
-      tiny-emitter: 2.1.0
-    dev: false
-
-  /@fortune-sheet/react/0.12.4-beta.0:
-    resolution: {integrity: sha512-6mXjiR+KjycpOcACokKQfqVZ0JU5Xw078RxUVvKKNeyrgbf718XJljOhZPQCYOsTEQ17NS3xbny7qPND6v4DIw==}
-    peerDependencies:
-      react: '>= 16.8'
-      react-dom: '>= 16.8'
-    dependencies:
-      '@fortune-sheet/core': 0.12.4-beta.0
-      immer: 9.0.17
-      lodash: 4.17.21
-    dev: false
-
   /@humanwhocodes/config-array/0.11.8:
     resolution: {integrity: sha512-UybHIJzJnR5Qc/MsD9Kr+RpO2h+/P1GhOwdiLPXK5TWk5sgTdu88bTD9UP+CKbPPh5Rni1u0GjAdYQLemG8g+g==}
     engines: {node: '>=10.10.0'}
@@ -4298,11 +4259,6 @@ packages:
 
   /base64-js/1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
-    dev: false
-
-  /bessel/1.0.2:
-    resolution: {integrity: sha512-Al3nHGQGqDYqqinXhQzmwmcRToe/3WyBv4N8aZc5Pef8xw2neZlR9VPi84Sa23JtgWcucu18HxVZrnI0fn2etw==}
-    engines: {node: '>=0.8'}
     dev: false
 
   /big.js/5.2.2:
@@ -6397,10 +6353,6 @@ packages:
     resolution: {integrity: sha512-jMfL18P+/6P6epANRvRk6q8t+3gGhqsJ9EuJ25AXE+9bNTYtssvzeYbEd0mXRYWCmmXSIbnlpz6vd6iJlmGGGQ==}
     dev: false
 
-  /immer/9.0.17:
-    resolution: {integrity: sha512-+hBruaLSQvkPfxRiTLK/mi4vLH+/VQS6z2KJahdoxlleFOI8ARqzOF17uy12eFDlqWmPoygwc5evgwcp+dlHhg==}
-    dev: false
-
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -6922,10 +6874,6 @@ packages:
       graceful-fs: 4.2.10
     dev: false
 
-  /jstat/1.9.6:
-    resolution: {integrity: sha512-rPBkJbK2TnA8pzs93QcDDPlKcrtZWuuCo2dVR0TFLOJSxhqfWOVCSp8aV3/oSbn+4uY4yw1URtLpHQedtmXfug==}
-    dev: false
-
   /jsx-ast-utils/3.3.3:
     resolution: {integrity: sha512-fYQHZTZ8jSfmWZ0iyzfwiU4WDX4HpHbMCZ3gPlWYiCl3BoeOTsqKBqnTVfH2rYT7eP5c3sVbeSPHnnJOaTrWiw==}
     engines: {node: '>=4.0'}
@@ -7408,10 +7356,6 @@ packages:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
     dependencies:
       boolbase: 1.0.0
-    dev: false
-
-  /numeral/2.0.6:
-    resolution: {integrity: sha512-qaKRmtYPZ5qdw4jWJD6bxEf1FJEqllJrwxCLIm0sQU/A7v2/czigzOb+C2uSiFsa9lBUzeH7M1oK+Q+OLxL3kA==}
     dev: false
 
   /object-assign/4.1.1:
@@ -10308,10 +10252,6 @@ packages:
       setimmediate: 1.0.5
     dev: false
 
-  /tiny-emitter/2.1.0:
-    resolution: {integrity: sha512-NB6Dk1A9xgQPMoGqC5CVXn123gWyte215ONT5Pp5a0yt4nlEoO1ZWeCwpncaekPHXO60i47ihFnZPiRPjRMq4Q==}
-    dev: false
-
   /tinycolor2/1.5.2:
     resolution: {integrity: sha512-h80m9GPFGbcLzZByXlNSEhp1gf8Dy+VX/2JCGUZsWLo7lV1mnE/XlxGYgRBoMLJh1lIDXP0EMC4RPTjlRaV+Bg==}
     dev: false
@@ -10595,11 +10535,6 @@ packages:
 
   /utila/0.4.0:
     resolution: {integrity: sha512-Z0DbgELS9/L/75wZbro8xAnT50pBVFQZ+hUEueGDU5FN51YSCYM+jdxsfCiHjwNP/4LCDD0i/graKpeBnOXKRA==}
-    dev: false
-
-  /uuid/8.3.2:
-    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
-    hasBin: true
     dev: false
 
   /v8-compile-cache/2.3.0:
