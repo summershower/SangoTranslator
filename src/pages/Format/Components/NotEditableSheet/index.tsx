@@ -32,7 +32,7 @@ const NotEditableSheet: React.FC<{
 
   return (
     <div
-      style={{ width: '50vw', height: '80vh' }}
+      style={{ flex: '1', height: '100%' }}
       id="formatSheetContainer"
       ref={containerRef}
     ></div>

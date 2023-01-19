@@ -59,7 +59,7 @@ const Sheet: React.FC = () => {
     <div
       style={{
         width: '100%',
-        height: !headerHeight ? '100vh' : 'calc(100vh - 56px)',
+        height: '100vh',
       }}
       id="sheetContainer"
       ref={containerRef}

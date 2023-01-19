@@ -94,5 +94,5 @@ export default defineConfig({
     {
       src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js',
     },
-  ], // 引入luckysheet JS文件，页面渲染后回立即创建表格，需要阻塞加载
+  ], // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
 });

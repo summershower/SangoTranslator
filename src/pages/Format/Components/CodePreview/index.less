@@ -1,10 +1,37 @@
+.codeBox {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100vh;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
 .code {
-  width: 40vw;
-  height: 80vh;
-  color: #ddd;
-  background: rgb(10 10 10);
-  border-radius: 5px;
+  flex: 1;
+  height: 100%;
   overflow-y: auto;
   white-space: pre-wrap;
   border: none;
+}
+
+.status {
+  position: absolute;
+  top: 0;
+  right: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  width: fit-content;
+  height: 40px;
+  // background: rgba(255, 255, 255, .8);
+  // backdrop-filter: blur(10px);
+  // -webkit-backdrop-filter: blur(5px);
+  border-radius: 10px;
+}
+
+.info {
+  color: rgb(36 149 110);
 }
