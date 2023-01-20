@@ -21,7 +21,11 @@ export function sleep(ms: number): Promise<boolean> {
     }, ms || 1000);
   });
 }
-function exportFile(rawText: string, type: 'javascript' | 'json') {
+function exportFile(
+  rawText: string,
+  type: 'javascript' | 'json',
+  ext: 'json' | 'js',
+) {
   try {
     const a = document.createElement('a');
     a.href = URL.createObjectURL(
@@ -29,7 +33,7 @@ function exportFile(rawText: string, type: 'javascript' | 'json') {
         type: `text/${type}`,
       }),
     );
-    a.setAttribute('download', `lang.${type}`);
+    a.setAttribute('download', `lang.${ext}`);
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -40,8 +44,8 @@ function exportFile(rawText: string, type: 'javascript' | 'json') {
   }
 }
 export function exportJSON(rawText: string) {
-  exportFile(rawText, 'json');
+  exportFile(rawText, 'json', 'json');
 }
 export function exportJS(rawText: string) {
-  exportFile(rawText, 'javascript');
+  exportFile(rawText, 'javascript', 'js');
 }
