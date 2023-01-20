@@ -14,7 +14,7 @@ export function format(index?: string): string {
       .getAllSheets()
       .find((v: any) => v.status).data;
   }
-  console.log(currentActiveSheet);
+  // console.log(currentActiveSheet);
   // 去除表格空行
   for (let i = currentActiveSheet.length - 1; i >= 0; i--) {
     let nullCount = 0;
@@ -60,7 +60,7 @@ export function format(index?: string): string {
       let value =
         currentActiveSheet[row][column]?.v ||
         currentActiveSheet[row][column]?.ct?.s?.[0]?.v;
-      console.log(currentActiveSheet[row][column]);
+      // console.log(currentActiveSheet[row][column]);
       if (value) {
         value = value.trim();
         columns[column].push(value);
@@ -179,9 +179,7 @@ export function format(index?: string): string {
       }
       if (repeatNum) currentKey += repeatNum + 1;
       key[i] = currentKey || '请替换';
-      enStr += `${key[i]}: \`${
-        result['en']?.[i]?.replaceAll('\r', '').replaceAll('\n', '') || ''
-      }\`,`;
+      enStr += `${key[i]}: \`${result['en']?.[i] || ''}\`,`;
     });
   }
   rawStr = rawStr.replace('<% en %>', enStr);
@@ -192,9 +190,7 @@ export function format(index?: string): string {
     let langStr = '';
     for (let i = 0; i < key.length; i++) {
       // console.log(key[i],value[i]);
-      langStr += `${key[i]}: \`${
-        words?.[i]?.replaceAll('\r', '').replaceAll('\n', '') || ''
-      }\`,`;
+      langStr += `${key[i]}: \`${words?.[i] || ''}\`,`;
     }
     rawStr = rawStr.replace(`<% ${lang} %>`, langStr);
   });
