@@ -99,8 +99,12 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
   publicPath: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
   outputPath: 'docs',
-  // Terser压缩默认支持es2015,lint有较新语法无法使用
+  // Terser压缩默认打包es2015目标产物, lint模块需要使用更新的语法
   jsMinifierOptions: {
     target: ['es2019'],
+  },
+  // 路由模式改为hash，解决git page刷新404的问题
+  history: {
+    type: 'hash',
   },
 });
