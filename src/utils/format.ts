@@ -2,13 +2,22 @@ import { frontEndJsTemplate } from './codeTemplate';
 import { isTr, isUr, isAr, isZh, isEn } from '@/utils/regMatch';
 import JSBeautify from 'js-beautify';
 // 格式化表格数据
-export function format(index?: string): string {
+export function format(sheetId?: string): [string, string] {
+  const JSONObject: { [key: string]: Record<string, string> } = {
+    zh: {},
+    en: {},
+    ar: {},
+    ur: {},
+    tr: {},
+  }; // JSON模式使用对象进行存储
+  let rawStr = frontEndJsTemplate; // JS模式使用模板进行替换
+
   // 获取目标工作簿
   let currentActiveSheet;
-  if (index) {
+  if (sheetId) {
     currentActiveSheet = window.luckysheet
       .getAllSheets()
-      .find((v: any) => v.index === index).data;
+      .find((v: any) => v.index === sheetId).data;
   } else {
     currentActiveSheet = window.luckysheet
       .getAllSheets()
@@ -30,7 +39,7 @@ export function format(index?: string): string {
     }
   }
   if (!currentActiveSheet?.[0]?.length) {
-    return '';
+    return ['', ''];
   }
   // 获取表格所有列的数据
   const columns = new Array(currentActiveSheet[0].length); // 每一列的内容
@@ -108,7 +117,6 @@ export function format(index?: string): string {
   // console.log(result, languageNumberStatistics);
   // 使用英语列生成Key值
   const key = new Array(maxAvailableWords).fill('请替换');
-  let rawStr = frontEndJsTemplate;
   let enStr = ``;
   if (result['en']) {
     result['en'].forEach((v, i) => {
@@ -127,10 +135,6 @@ export function format(index?: string): string {
           (!currentKey.length && /^[0-9]+$/.test(wordsArr[i]))
         )
           continue;
-
-        // if(/^[0-9]+$/.test(wordsArr[i])) {
-        //   console.log(wordsArr[i], currentKey);
-        // }
         // 禁止时间数字连体
         if (
           /^[0-9]+$/.test(wordsArr[i]) &&
@@ -156,9 +160,12 @@ export function format(index?: string): string {
             'xx',
             'x',
             'into',
+            'is',
+            'n',
+            'a',
           ].includes(wordsArr[i].toLowerCase()) &&
             (currentKey.length + (wordsArr?.[i + 1]?.length || 0) > 21 ||
-              i === Math.min(8, wordsArr.length) - 1)) ||
+              i === Math.min(6, wordsArr.length) - 1)) ||
           currentKey.length > 21
         ) {
           break;
@@ -180,8 +187,11 @@ export function format(index?: string): string {
         }
       }
       if (repeatNum) currentKey += repeatNum + 1;
-      key[i] = currentKey || '请替换';
+      key[i] = currentKey || '请替换' + i;
+      // 追加JS模板
       enStr += `${key[i]}: \`${result['en']?.[i] || ''}\`,`;
+      // 追加JSON对象
+      JSONObject['en'][key[i]] = result['en']?.[i] || '';
     });
   }
   rawStr = rawStr.replace('<% en %>', enStr);
@@ -191,13 +201,22 @@ export function format(index?: string): string {
     if (!words) return (rawStr = rawStr.replace(`<% ${lang} %>`, ''));
     let langStr = '';
     for (let i = 0; i < key.length; i++) {
-      // console.log(key[i],value[i]);
       langStr += `${key[i]}: \`${words?.[i] || ''}\`,`;
+
+      JSONObject[lang][key[i]] = words?.[i] || '' || '';
     }
     rawStr = rawStr.replace(`<% ${lang} %>`, langStr);
   });
   // 格式化代码
+
   const options = { indent_size: 2, space_in_empty_paren: true };
   rawStr = JSBeautify(rawStr, options);
-  return rawStr;
+  let JSONStr = '';
+  // JSONObject.sdf=JSONObject;
+  try {
+    JSONStr = JSON.stringify(JSONObject, null, 2);
+  } catch (e) {
+    console.log(e);
+  }
+  return [rawStr, JSONStr];
 }

@@ -6,15 +6,16 @@ import { javascript, esLint } from '@codemirror/lang-javascript';
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { linter } from '@codemirror/lint';
 import * as eslint from 'eslint-linter-browserify';
-import { Button, Space, notification } from 'antd';
+import { Button, Space, notification, Switch, Tooltip } from 'antd';
 import { autoTest } from 'utils/autoTest';
 import {
   CopyOutlined,
   SaveOutlined,
   BugOutlined,
   LoadingOutlined,
+  DownloadOutlined,
 } from '@ant-design/icons';
-import { copy, sleep } from 'utils/common';
+import { copy, sleep, exportJS, exportJSON } from 'utils/common';
 import { useState } from 'react';
 let view: EditorView;
 const CodePreview = forwardRef<
@@ -23,69 +24,82 @@ const CodePreview = forwardRef<
 >(({ isLoadedSheet }, refName) => {
   const [isPassedTest, setIsPaddedTest] = useState(false);
   const [isTesting, setIsTesting] = useState(false);
+  const [formatMode, setFormatMode] = useState('JS');
 
-  // 代码诊断拓展
   // 初始化编辑器
   function initEditor(content: string) {
     if (view) {
       view.destroy();
     }
+    const extendsArr = [
+      basicSetup,
+      javascript(),
+      EditorView.lineWrapping,
+      solarizedLight,
+      EditorView.inputHandler.of(() => {
+        setIsPaddedTest(false);
+        return false;
+      }),
+      linter(
+        esLint(new eslint.Linter(), {
+          // eslint configuration
+          parserOptions: {
+            ecmaVersion: 2019,
+            sourceType: 'module',
+          },
+          env: {
+            browser: true,
+            node: false,
+          },
+          rules: {
+            semi: ['error', 'never'],
+          },
+        }),
+      ),
+    ];
+    if (formatMode === 'JSON') extendsArr.pop();
     view = new EditorView({
       doc: content,
-      extensions: [
-        basicSetup,
-        javascript(),
-        EditorView.lineWrapping,
-        solarizedLight,
-        EditorView.inputHandler.of(() => {
-          setIsPaddedTest(false);
-          return false;
-        }),
-        linter(
-          esLint(new eslint.Linter(), {
-            // eslint configuration
-            parserOptions: {
-              ecmaVersion: 2019,
-              sourceType: 'module',
-            },
-            env: {
-              browser: true,
-              node: false,
-            },
-            rules: {
-              semi: ['error', 'never'],
-            },
-          }),
-        ),
-      ],
+      extensions: extendsArr,
       parent: document.querySelector('#code') as HTMLElement,
     });
   }
   // 格式化表格内容
   function formatSheet(index?: string) {
-    const rawStr = format(index);
-    initEditor(rawStr);
+    const [rawStr, JSONStr] = format(index);
+    if (rawStr.length && !JSONStr) {
+      notification.error({
+        message: 'JSON文件转换失败',
+        description: '请检查JS文件是否有语法错误',
+      });
+      setIsPaddedTest(false);
+      initEditor(rawStr);
+      return;
+    }
+    initEditor(formatMode === 'JS' ? rawStr : JSONStr);
     setIsPaddedTest(false);
   }
-  // 进行生成的JS文件的测试
+  // 对生成的文件进行测试(含JS校验和JSON校验)
   async function handleTest() {
     setIsTesting(true);
     // 浏览器端lint性能较差，等待校验最后修改结果
-    await sleep(1500);
-    let errorCount = 0;
-    const diags = view.state?.values.filter((v) => v?.diagnostics);
-    diags.forEach((v) => {
-      if (v?.selected) errorCount++;
-    });
-    if (errorCount) {
-      setIsTesting(false);
-      return notification.error({
-        message: '未通过测试',
-        description: '存在语法错误，请核查',
+    if (formatMode === 'JS') {
+      await sleep(1500);
+      let errorCount = 0;
+      const diags = view.state?.values?.filter((v: any) => v?.diagnostics);
+      diags?.forEach((v: any) => {
+        if (v?.selected) errorCount++;
       });
+      if (errorCount) {
+        setIsTesting(false);
+        return notification.error({
+          message: '未通过测试',
+          description: '存在语法错误，请核查',
+        });
+      }
     }
     const curCode = view.state.toJSON().doc;
-    autoTest(curCode)
+    autoTest(curCode, formatMode)
       .then(() => {
         setIsPaddedTest(true);
         setIsTesting(false);
@@ -107,13 +121,21 @@ const CodePreview = forwardRef<
   function handleCopy() {
     copy(view.state.toJSON().doc);
   }
+  //  下载文件
+  function handleDownload() {
+    if (formatMode === 'JS') {
+      exportJS(view.state.toJSON().doc);
+    } else {
+      exportJSON(view.state.toJSON().doc);
+    }
+  }
 
   useEffect(() => {
     // 读取luckysheet数据
     if (isLoadedSheet) {
       formatSheet();
     }
-  }, [isLoadedSheet]);
+  }, [isLoadedSheet, formatMode]);
   // 暴露格式化文档方法
   useImperativeHandle(
     refName,
@@ -129,27 +151,51 @@ const CodePreview = forwardRef<
       <div className={styles.code} id="code"></div>
       <div className={styles.status}>
         <Space size={8}>
-          <Button icon={<CopyOutlined />} onClick={handleCopy}>
-            复制
-          </Button>
-          {!isPassedTest ? (
+          <Tooltip placement="bottomRight" title="切换JS/JSON">
+            <Switch
+              checkedChildren="JS"
+              unCheckedChildren="JSON"
+              defaultChecked
+              onChange={() =>
+                setFormatMode((pre) => (pre === 'JS' ? 'JSON' : 'JS'))
+              }
+            />
+          </Tooltip>
+          <Tooltip placement="bottomRight" title="下载">
             <Button
-              icon={isTesting ? <LoadingOutlined /> : <BugOutlined />}
-              onClick={handleTest}
-              disabled={isTesting}
-            >
-              {isTesting ? '测试中' : '测试'}
-            </Button>
+              icon={<DownloadOutlined />}
+              onClick={handleDownload}
+            ></Button>
+          </Tooltip>
+          <Tooltip placement="bottomRight" title="复制">
+            <Button icon={<CopyOutlined />} onClick={handleCopy}></Button>
+          </Tooltip>
+          {!isPassedTest ? (
+            <Tooltip placement="bottomRight" title="测试">
+              <Button
+                icon={isTesting ? <LoadingOutlined /> : <BugOutlined />}
+                type="primary"
+                onClick={handleTest}
+                disabled={isTesting}
+              >
+                {/* {isTesting ? '测试中' : '测试'} */}
+              </Button>
+            </Tooltip>
           ) : (
             <></>
           )}
-          <Button
-            type="primary"
-            icon={<SaveOutlined />}
-            disabled={!isPassedTest}
+          <Tooltip
+            placement="bottomRight"
+            title={isPassedTest ? '提交该文件' : '提交该文件(需要先通过测试)'}
           >
-            提交
-          </Button>
+            <Button
+              type="primary"
+              icon={<SaveOutlined />}
+              disabled={!isPassedTest}
+            >
+              {/* 提交 */}
+            </Button>
+          </Tooltip>
         </Space>
       </div>
     </div>
