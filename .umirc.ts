@@ -103,8 +103,4 @@ export default defineConfig({
   jsMinifierOptions: {
     target: ['es2019'],
   },
-  // 路由模式改为hash，解决git page刷新404的问题
-  history: {
-    type: 'memory',
-  },
 });
