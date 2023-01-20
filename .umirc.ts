@@ -99,4 +99,8 @@ export default defineConfig({
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
   publicPath: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
   outputPath: 'docs',
+  // Terser压缩默认支持es2015,lint有较新语法无法使用
+  jsMinifierOptions: {
+    target: ['es2019'],
+  },
 });
