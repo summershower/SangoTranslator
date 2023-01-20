@@ -113,7 +113,8 @@ export function format(index?: string): string {
   if (result['en']) {
     result['en'].forEach((v, i) => {
       const wordsArr = v
-        .replace('-', 'To')
+        .replaceAll('-', 'To')
+        .replaceAll("'", '')
         .replace(/[^a-zA-Z0-9 ]/g, ' ')
         .trim()
         .split(' ');

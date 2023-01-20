@@ -4,6 +4,7 @@ specifiers:
   '@ant-design/icons': ^4.8.0
   '@ant-design/pro-components': ^2.0.1
   '@codemirror/lang-javascript': ^6.1.2
+  '@codemirror/lint': ^6.1.0
   '@codemirror/state': ^6.2.0
   '@types/js-beautify': ^1.13.3
   '@types/react': ^18.0.0
@@ -14,6 +15,7 @@ specifiers:
   cm6-theme-solarized-light: ^0.2.0
   codemirror: ^6.0.1
   eslint: ^8.31.0
+  eslint-linter-browserify: ^8.32.0
   husky: ^8.0.1
   js-beautify: ^1.14.7
   lint-staged: ^13.0.3
@@ -27,12 +29,14 @@ dependencies:
   '@ant-design/icons': 4.8.0
   '@ant-design/pro-components': 2.3.52_antd@5.1.4
   '@codemirror/lang-javascript': 6.1.2
+  '@codemirror/lint': 6.1.0
   '@codemirror/state': 6.2.0
   '@umijs/max': 4.0.42_yyqe4hqov3x6xcxgchllpcnrhq
   ahooks: 3.7.4
   antd: 5.1.4
   cm6-theme-solarized-light: 0.2.0_@codemirror+state@6.2.0
   codemirror: 6.0.1
+  eslint-linter-browserify: 8.32.0
   js-beautify: 1.14.7
 
 devDependencies:
@@ -5660,6 +5664,10 @@ packages:
   /escape-string-regexp/4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+
+  /eslint-linter-browserify/8.32.0:
+    resolution: {integrity: sha512-o2ips2wXrwQCjtWr68kz5r93RPa1OTFfdUfySK8YhEc3S+CdUiS6L/202VH/jvU+oSlzEOdJx7C07owZmFnO2w==}
+    dev: false
 
   /eslint-plugin-jest/26.1.5_r5oph7aybri7tabjxbdz4u2oxm:
     resolution: {integrity: sha512-su89aDuljL9bTjEufTXmKUMSFe2kZUL9bi7+woq+C2ukHZordhtfPm4Vg+tdioHBaKf8v3/FXW9uV0ksqhYGFw==}

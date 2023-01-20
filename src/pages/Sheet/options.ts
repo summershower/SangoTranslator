@@ -2,15 +2,15 @@ import { modify } from 'utils/indexDB';
 export default {
   lang: 'zh',
   container: 'sheetContainer',
-  column: 6,
+  // column: 6,
   showinfobar: false,
   data: [
     {
       name: 'Sheet1', //工作表名称
-      row: 72, //行数
-      column: 6, //列数
-      defaultRowHeight: 24, //自定义行高
-      defaultColWidth: 240, //自定义列宽
+      // row: 72, //行数
+      // column: 6, //列数
+      // defaultRowHeight: 24, //自定义行高
+      // defaultColWidth: 240, //自定义列宽
     },
   ],
   showtoolbarConfig: {

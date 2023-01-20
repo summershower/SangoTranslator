@@ -14,12 +14,14 @@
     "@ant-design/icons": "^4.8.0",
     "@ant-design/pro-components": "^2.0.1",
     "@codemirror/lang-javascript": "^6.1.2",
+    "@codemirror/lint": "^6.1.0",
     "@codemirror/state": "^6.2.0",
     "@umijs/max": "^4.0.42",
     "ahooks": "^3.7.4",
     "antd": "^5.0.0",
     "cm6-theme-solarized-light": "^0.2.0",
     "codemirror": "^6.0.1",
+    "eslint-linter-browserify": "^8.32.0",
     "js-beautify": "^1.14.7"
   },
   "devDependencies": {
