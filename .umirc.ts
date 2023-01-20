@@ -105,6 +105,6 @@ export default defineConfig({
   },
   // 路由模式改为hash，解决git page刷新404的问题
   history: {
-    type: 'hash',
+    type: 'memory',
   },
 });
