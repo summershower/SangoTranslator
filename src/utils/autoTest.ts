@@ -29,19 +29,20 @@ export function autoTest(
         }
         Object.entries(lang_zh).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('中文KEY值不一致:'+enKeys[index] + '!==' + key);
-          if(typeof value !== 'string') throw new Error('中文KEY类型有误:'+enKeys[index]);
+          if(typeof value !== 'string') throw new Error('中文VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
+          if (!/^[a-zA-Z]+[a-zA-Z0-9_]*/.test(key)) throw new Error('KEY有误, 只能由英文/数字/下划线构成:' + enKeys[index]);
         })
         Object.entries(lang_ar).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('阿语KEY值不一致:'+enKeys[index] + '!==' + key);
-          if(typeof value !== 'string') throw new Error('阿语KEY类型有误:'+enKeys[index]);
+          if(typeof value !== 'string') throw new Error('阿语VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
         })
         Object.entries(lang_ur).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('乌尔都KEY值不一致:'+enKeys[index] + '!==' + key);
-          if(typeof value !== 'string') throw new Error('乌尔都KEY类型有误:'+enKeys[index]);
+          if(typeof value !== 'string') throw new Error('乌尔都VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
         })
         Object.entries(lang_tr).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('乌尔都KEY值不一致:'+enKeys[index] + '!==' + key);
-          if(typeof value !== 'string') throw new Error('乌尔都KEY类型有误:'+enKeys[index]);
+          if(typeof value !== 'string') throw new Error('乌尔都VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
         })
         window.iframePassedTest();
        } catch(err) {
@@ -122,25 +123,27 @@ export function autoTest(
           if (enKeys[index] !== key)
             reject('中文KEY值不一致:' + enKeys[index] + '!==' + key);
           if (typeof value !== 'string')
-            reject('中文KEY类型有误:' + enKeys[index]);
+            reject('中文VALUE有误, 请检查该KEY值:' + enKeys[index]);
+          if (!/^[a-zA-Z]+[a-zA-Z0-9_]*/.test(key))
+            reject('KEY有误, 只能由英文/数字/下划线构成:' + enKeys[index]);
         });
         Object.entries(obj.ar).forEach(([key, value], index) => {
           if (enKeys[index] !== key)
             reject('阿语KEY值不一致:' + enKeys[index] + '!==' + key);
           if (typeof value !== 'string')
-            reject('阿语KEY类型有误:' + enKeys[index]);
+            reject('阿语VALUE有误, 请检查该KEY值:' + enKeys[index]);
         });
         Object.entries(obj.ur).forEach(([key, value], index) => {
           if (enKeys[index] !== key)
             reject('乌尔都KEY值不一致:' + enKeys[index] + '!==' + key);
           if (typeof value !== 'string')
-            reject('乌尔都KEY类型有误:' + enKeys[index]);
+            reject('乌尔都VALUE类型有误, 请检查该KEY值:' + enKeys[index]);
         });
         Object.entries(obj.tr).forEach(([key, value], index) => {
           if (enKeys[index] !== key)
             reject('乌尔都KEY值不一致:' + enKeys[index] + '!==' + key);
           if (typeof value !== 'string')
-            reject('乌尔都KEY类型有误:' + enKeys[index]);
+            reject('乌尔都VALUE类型有误, 请检查该KEY值:' + enKeys[index]);
         });
         resolve(true);
       } catch (e) {

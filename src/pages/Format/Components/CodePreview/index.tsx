@@ -87,7 +87,6 @@ const CodePreview = forwardRef<
   async function handleTest() {
     setIsTesting(true);
     // 浏览器端lint性能较差，等待校验最后修改结果
-
     await sleep(1500);
     let errorCount = 0;
     const diags = view.state?.values?.filter((v: any) => v?.diagnostics);
@@ -101,8 +100,14 @@ const CodePreview = forwardRef<
         description: '存在语法错误，请核查',
       });
     }
-
     const curCode = view.state.toJSON().doc;
+    if (keyMode === 'WORD' && /请替换[0-9]*/g.test(curCode)) {
+      setIsTesting(false);
+      return notification.error({
+        message: '未通过测试',
+        description: `存在未能解析的KEY值(搜索"请替换"), 请手动填写, 并上报此案例`,
+      });
+    }
     autoTest(curCode, formatMode)
       .then(() => {
         setIsPaddedTest(true);
