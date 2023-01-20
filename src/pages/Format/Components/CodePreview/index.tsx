@@ -3,6 +3,7 @@ import { useEffect, forwardRef, useImperativeHandle } from 'react';
 import { format } from 'utils/format';
 import { EditorView, basicSetup } from 'codemirror';
 import { javascript, esLint } from '@codemirror/lang-javascript';
+import { json, jsonParseLinter } from '@codemirror/lang-json';
 import { solarizedLight } from 'cm6-theme-solarized-light';
 import { linter } from '@codemirror/lint';
 import * as eslint from 'eslint-linter-browserify';
@@ -33,31 +34,32 @@ const CodePreview = forwardRef<
     }
     const extendsArr = [
       basicSetup,
-      javascript(),
+      formatMode === 'JS' ? javascript() : json(),
       EditorView.lineWrapping,
       solarizedLight,
       EditorView.inputHandler.of(() => {
         setIsPaddedTest(false);
         return false;
       }),
-      linter(
-        esLint(new eslint.Linter(), {
-          // eslint configuration
-          parserOptions: {
-            ecmaVersion: 2019,
-            sourceType: 'module',
-          },
-          env: {
-            browser: true,
-            node: false,
-          },
-          rules: {
-            semi: ['error', 'never'],
-          },
-        }),
-      ),
+      formatMode === 'JS'
+        ? linter(
+            esLint(new eslint.Linter(), {
+              // eslint configuration
+              parserOptions: {
+                ecmaVersion: 2019,
+                sourceType: 'module',
+              },
+              env: {
+                browser: true,
+                node: false,
+              },
+              rules: {
+                semi: ['error', 'never'],
+              },
+            }),
+          )
+        : linter(jsonParseLinter()),
     ];
-    if (formatMode === 'JSON') extendsArr.pop();
     view = new EditorView({
       doc: content,
       extensions: extendsArr,
@@ -69,8 +71,8 @@ const CodePreview = forwardRef<
     const [rawStr, JSONStr] = format(index);
     if (rawStr.length && !JSONStr) {
       notification.error({
-        message: 'JSON文件转换失败',
-        description: '请检查JS文件是否有语法错误',
+        message: 'JSON转换失败',
+        description: '请检查JS格式化是否正常，并上报开发此案例',
       });
       setIsPaddedTest(false);
       initEditor(rawStr);
@@ -83,21 +85,21 @@ const CodePreview = forwardRef<
   async function handleTest() {
     setIsTesting(true);
     // 浏览器端lint性能较差，等待校验最后修改结果
-    if (formatMode === 'JS') {
-      await sleep(1500);
-      let errorCount = 0;
-      const diags = view.state?.values?.filter((v: any) => v?.diagnostics);
-      diags?.forEach((v: any) => {
-        if (v?.selected) errorCount++;
+
+    await sleep(1500);
+    let errorCount = 0;
+    const diags = view.state?.values?.filter((v: any) => v?.diagnostics);
+    diags?.forEach((v: any) => {
+      if (v?.selected) errorCount++;
+    });
+    if (errorCount) {
+      setIsTesting(false);
+      return notification.error({
+        message: '未通过测试',
+        description: '存在语法错误，请核查',
       });
-      if (errorCount) {
-        setIsTesting(false);
-        return notification.error({
-          message: '未通过测试',
-          description: '存在语法错误，请核查',
-        });
-      }
     }
+
     const curCode = view.state.toJSON().doc;
     autoTest(curCode, formatMode)
       .then(() => {

@@ -14,6 +14,7 @@
     "@ant-design/icons": "^4.8.0",
     "@ant-design/pro-components": "^2.0.1",
     "@codemirror/lang-javascript": "^6.1.2",
+    "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lint": "^6.1.0",
     "@codemirror/state": "^6.2.0",
     "@umijs/max": "^4.0.42",
