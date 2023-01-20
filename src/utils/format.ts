@@ -14,7 +14,6 @@ export function format(index?: string): string {
       .getAllSheets()
       .find((v: any) => v.status).data;
   }
-  // console.log(currentActiveSheet);
   // 去除表格空行
   for (let i = currentActiveSheet.length - 1; i >= 0; i--) {
     let nullCount = 0;
@@ -30,7 +29,9 @@ export function format(index?: string): string {
       currentActiveSheet.splice(i, 1);
     }
   }
-
+  if (!currentActiveSheet?.[0]?.length) {
+    return '';
+  }
   // 获取表格所有列的数据
   const columns = new Array(currentActiveSheet[0].length); // 每一列的内容
   const columnsWordsStatistics = new Array(currentActiveSheet[0].length).fill(
