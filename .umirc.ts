@@ -103,4 +103,11 @@ export default defineConfig({
   jsMinifierOptions: {
     target: ['es2019'],
   },
+  // 解决Git page刷新404的问题
+  copy: [
+    {
+      from: '404.html',
+      to: 'docs/',
+    },
+  ],
 });
