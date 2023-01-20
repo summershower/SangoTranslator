@@ -60,6 +60,12 @@ export function autoTest(
         function iframeOnLoad() {
           try {
             document.body.appendChild(script);
+            setTimeout(() => {
+              // 超过3秒视作代码报错，直接reject
+              (window as any).iframeGlobalErrorHandler(
+                '测试超时，请打开控制台查看代码错误',
+              );
+            }, 3000);
           } catch (err) {
             reject(err);
           }

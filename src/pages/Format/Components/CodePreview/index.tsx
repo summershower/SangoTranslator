@@ -108,6 +108,16 @@ const CodePreview = forwardRef<
         description: `存在未能解析的KEY值(搜索"请替换"), 请手动填写, 并上报此案例`,
       });
     }
+    const checkExportReg =
+      /(export){1} +((const)|(let)|(var)){1} +(lang_((zh)|(ar)|(tr)|(ur)|(en))){1} *= *{{1}[^}]*}{1}/g;
+
+    if (formatMode === 'JS' && curCode.match(checkExportReg).length !== 5) {
+      setIsTesting(false);
+      return notification.error({
+        message: '未通过测试',
+        description: `JS文件需要Export相应对象，请补充关键字`,
+      });
+    }
     autoTest(curCode, formatMode)
       .then(() => {
         setIsPaddedTest(true);
