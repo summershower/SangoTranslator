@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import options from './options';
 import { initDB, read } from 'utils/indexDB';
+import styles from './index.less';
 const NotEditableSheet: React.FC<{
   setIsLoadedSheet: (status: boolean) => void;
   formatSheet: (index?: string) => void;
@@ -32,7 +33,7 @@ const NotEditableSheet: React.FC<{
 
   return (
     <div
-      style={{ flex: '1', height: '100%' }}
+      className={styles.formatSheetContainer}
       id="formatSheetContainer"
       ref={containerRef}
     ></div>

@@ -2,7 +2,10 @@ import { frontEndJsTemplate } from './codeTemplate';
 import { isTr, isUr, isAr, isZh, isEn } from '@/utils/regMatch';
 import JSBeautify from 'js-beautify';
 // 格式化表格数据
-export function format(sheetId?: string): [string, string] {
+export function format(params: {
+  sheetId?: string;
+  keyMode: 'WORD' | 'INDEX';
+}): [string, string] {
   const JSONObject: { [key: string]: Record<string, string> } = {
     zh: {},
     en: {},
@@ -14,10 +17,10 @@ export function format(sheetId?: string): [string, string] {
 
   // 获取目标工作簿
   let currentActiveSheet;
-  if (sheetId) {
+  if (params?.sheetId) {
     currentActiveSheet = window.luckysheet
       .getAllSheets()
-      .find((v: any) => v.index === sheetId).data;
+      .find((v: any) => v.index === params?.sheetId).data;
   } else {
     currentActiveSheet = window.luckysheet
       .getAllSheets()
@@ -127,66 +130,70 @@ export function format(sheetId?: string): [string, string] {
         .trim()
         .split(' ');
       let currentKey = '';
-      for (let i = 0; i < Math.min(6, wordsArr.length); i++) {
-        // 禁止数字开头，禁止无意义空格
-        if (
-          !wordsArr[i] ||
-          wordsArr[i] === ' ' ||
-          (!currentKey.length && /^[0-9]+$/.test(wordsArr[i]))
-        )
-          continue;
-        // 禁止时间数字连体
-        if (
-          /^[0-9]+$/.test(wordsArr[i]) &&
-          (wordsArr[i].length > 5 ||
-            /[0-9]/.test(currentKey[currentKey.length - 1]))
-        )
-          continue;
-        // 去除多余介词和无意义尾词+限制Key值长度
-        if (
-          ([
-            'the',
-            'if',
-            'to',
-            'of',
-            'on',
-            'for',
-            'has',
-            'have',
-            'can',
-            'could',
-            'in',
-            'xxx',
-            'xx',
-            'x',
-            'into',
-            'is',
-            'n',
-            'a',
-          ].includes(wordsArr[i].toLowerCase()) &&
-            (currentKey.length + (wordsArr?.[i + 1]?.length || 0) > 21 ||
-              i === Math.min(6, wordsArr.length) - 1)) ||
-          currentKey.length > 21
-        ) {
-          break;
+      if (params.keyMode === 'WORD') {
+        for (let i = 0; i < Math.min(6, wordsArr.length); i++) {
+          // 禁止数字开头，禁止无意义空格
+          if (
+            !wordsArr[i] ||
+            wordsArr[i] === ' ' ||
+            (!currentKey.length && /^[0-9]+$/.test(wordsArr[i]))
+          )
+            continue;
+          // 禁止时间数字连体
+          if (
+            /^[0-9]+$/.test(wordsArr[i]) &&
+            (wordsArr[i].length > 5 ||
+              /[0-9]/.test(currentKey[currentKey.length - 1]))
+          )
+            continue;
+          // 去除多余介词和无意义尾词+限制Key值长度
+          if (
+            ([
+              'the',
+              'if',
+              'to',
+              'of',
+              'on',
+              'for',
+              'has',
+              'have',
+              'can',
+              'could',
+              'in',
+              'xxx',
+              'xx',
+              'x',
+              'into',
+              'is',
+              'n',
+              'a',
+            ].includes(wordsArr[i].toLowerCase()) &&
+              (currentKey.length + (wordsArr?.[i + 1]?.length || 0) > 21 ||
+                i === Math.min(6, wordsArr.length) - 1)) ||
+            currentKey.length > 21
+          ) {
+            break;
+          }
+          // 首字母大写
+          currentKey += (
+            wordsArr[i].slice(0, 1).toUpperCase() + wordsArr[i].slice(1)
+          ).trim();
         }
-        // 首字母大写
-        currentKey += (
-          wordsArr[i].slice(0, 1).toUpperCase() + wordsArr[i].slice(1)
-        ).trim();
-      }
-      // 判断KEY是否重复
-      let repeatNum = 0;
-      for (let i = 0; i < key.length; i++) {
-        if (
-          repeatNum
-            ? key[i] === currentKey + (repeatNum + 1)
-            : key[i] === currentKey
-        ) {
-          repeatNum++;
+        // 判断KEY是否重复
+        let repeatNum = 0;
+        for (let i = 0; i < key.length; i++) {
+          if (
+            repeatNum
+              ? key[i] === currentKey + (repeatNum + 1)
+              : key[i] === currentKey
+          ) {
+            repeatNum++;
+          }
         }
+        if (repeatNum) currentKey += repeatNum + 1;
+      } else {
+        currentKey = `m${i + 1}`;
       }
-      if (repeatNum) currentKey += repeatNum + 1;
       key[i] = currentKey || '请替换' + i;
       // 追加JS模板
       enStr += `${key[i]}: \`${result['en']?.[i] || ''}\`,`;

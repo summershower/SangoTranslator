@@ -23,15 +23,17 @@ const CodePreview = forwardRef<
   { formatSheet: (index?: string) => void },
   { isLoadedSheet: boolean }
 >(({ isLoadedSheet }, refName) => {
-  const [isPassedTest, setIsPaddedTest] = useState(false);
-  const [isTesting, setIsTesting] = useState(false);
-  const [formatMode, setFormatMode] = useState('JS');
+  const [isPassedTest, setIsPaddedTest] = useState(false); // 是否通过测试
+  const [isTesting, setIsTesting] = useState(false); // 是否测试中
+  const [formatMode, setFormatMode] = useState('JS'); // 格式化模式:JS/JSON
+  const [keyMode, setKeyMode] = useState('WORD'); // KEY值模式
 
   // 初始化编辑器
   function initEditor(content: string) {
     if (view) {
       view.destroy();
     }
+    // 编辑器拓展插件
     const extendsArr = [
       basicSetup,
       formatMode === 'JS' ? javascript() : json(),
@@ -68,7 +70,7 @@ const CodePreview = forwardRef<
   }
   // 格式化表格内容
   function formatSheet(index?: string) {
-    const [rawStr, JSONStr] = format(index);
+    const [rawStr, JSONStr] = format({ sheetId: index, keyMode });
     if (rawStr.length && !JSONStr) {
       notification.error({
         message: 'JSON转换失败',
@@ -132,12 +134,12 @@ const CodePreview = forwardRef<
     }
   }
 
+  // 初始化或设置更改时,重新格式化表格
   useEffect(() => {
-    // 读取luckysheet数据
     if (isLoadedSheet) {
       formatSheet();
     }
-  }, [isLoadedSheet, formatMode]);
+  }, [isLoadedSheet, formatMode, keyMode]);
   // 暴露格式化文档方法
   useImperativeHandle(
     refName,
@@ -146,14 +148,27 @@ const CodePreview = forwardRef<
         formatSheet,
       };
     },
-    [],
+    [formatMode, keyMode],
   );
   return (
     <div className={styles.codeBox}>
       <div className={styles.code} id="code"></div>
       <div className={styles.status}>
         <Space size={8}>
-          <Tooltip placement="bottomRight" title="切换JS/JSON">
+          <Tooltip
+            placement="bottomRight"
+            title="切换KEY值命名模式, 单词模式书写时语义会更清晰, 但如果英文文案后期有修改, KEY值可能有变动"
+          >
+            <Switch
+              checkedChildren="Words"
+              unCheckedChildren="Index"
+              defaultChecked
+              onChange={() =>
+                setKeyMode((pre) => (pre === 'WORD' ? 'INDEX' : 'WORD'))
+              }
+            />
+          </Tooltip>
+          <Tooltip placement="bottomRight" title="切换JS/JSON格式">
             <Switch
               checkedChildren="JS"
               unCheckedChildren="JSON"
