@@ -33,10 +33,16 @@ export default defineConfig({
       icon: 'CloudUploadOutlined',
     },
     {
+      name: '开发',
+      path: '/dev',
+      component: './DevAssistance',
+      icon: 'CodeSandboxOutlined',
+    },
+    {
       name: '历史',
       path: '/history',
       component: './History',
-      icon: 'HistoryOutlined',
+      icon: 'FieldTimeOutlined',
     },
     {
       name: '权限',
@@ -61,12 +67,6 @@ export default defineConfig({
     // },
   ],
   npmClient: 'pnpm',
-  alias: {
-    img: '/src/assets/images',
-    comp: '/src/components',
-    pages: '/src/pages',
-    utils: '/src/utils',
-  }, // 路径别名
   clickToComponent: { editor: 'vscode' }, // 点击Alt+Click跳转到源码位置
   favicons: ['https://cdn.meiqijiacheng.com/h5-deploy/favicon.ico'], // 网站图标
   links: [

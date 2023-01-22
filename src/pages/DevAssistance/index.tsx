@@ -1,0 +1,151 @@
+import { Select, Space, Divider, Radio, Input, RadioChangeEvent } from 'antd';
+import { useState, useEffect } from 'react';
+import LangItem from './Components/LangItem';
+import styles from './index.less';
+import { readFile, initDB } from '@/utils/indexDB';
+import type { SheetFileData } from '../Types/db';
+import type { LangObject } from '../Types';
+import { JSToObject } from '@/utils/common';
+import useNoPadding from '@/hooks/useNoPadding';
+const { Search } = Input;
+const Dev: React.FC = () => {
+  const [sheets, setSheets] = useState<SheetFileData[]>([]);
+  const [currentSheetId, setCurrentSheetId] = useState('');
+  const [langObj, setLangObj] = useState<LangObject>();
+  const [keywords, setKeywords] = useState('');
+  const [copyMode, setCopyMode] = useState<'TEMPLATE' | 'JS' | 'TEMPLATEJS'>(
+    'TEMPLATE',
+  );
+  const [UILang, setUILang] = useState<'TR' | 'EN'>('TR');
+  useNoPadding();
+  function getLangs() {
+    console.log(sheets);
+    const targetSheet = sheets.find((v) => v.sheetId === currentSheetId);
+    if (targetSheet?.json) {
+      setLangObj(JSON.parse(targetSheet.json));
+    } else if (targetSheet?.js) {
+      JSToObject(targetSheet.js).then((res: LangObject) => {
+        console.log(res, '???');
+        setLangObj(res);
+      });
+    }
+  }
+  useEffect(() => {
+    initDB().then(() => {
+      readFile().then((res: any) => {
+        const sheets: SheetFileData[] = Array.isArray(res)
+          ? res.filter((v) => v?.js || v?.json).sort((a, b) => b.time - a.time)
+          : [];
+        if (sheets.length) {
+          setCurrentSheetId(sheets[0].sheetId);
+          setSheets(sheets);
+        }
+      });
+    });
+  }, []);
+  useEffect(() => {
+    getLangs();
+  }, [currentSheetId]);
+  function handleChangeSheet(v: string) {
+    setCurrentSheetId(v);
+  }
+  function handleChangeCopyMode(e: RadioChangeEvent) {
+    setCopyMode(e.target.value);
+  }
+  function handleChangeUILang(v: 'TR' | 'EN') {
+    setUILang(v);
+  }
+  const copyModes = [
+    { label: '模板', value: 'TEMPLATE' },
+    { label: '模板JS', value: 'TEMPLATEJS' },
+    { label: 'JS', value: 'JS' },
+  ];
+
+  function onSearch() {}
+  function handleInputKeywords(e: any) {
+    setKeywords(e.target.value.trim());
+  }
+  return (
+    <div className={styles.container}>
+      {/* 状态栏 */}
+      <div className={styles.status}>
+        <Space split={<Divider type="vertical" />}>
+          <div>
+            <span>选择工作表：</span>
+            <Select
+              defaultValue={currentSheetId}
+              style={{ width: 200 }}
+              onChange={handleChangeSheet}
+              options={sheets.map((v) => {
+                return {
+                  value: v.sheetId,
+                  label: v.sheetName,
+                };
+              })}
+            />
+          </div>
+
+          <div>
+            <span>UI语言：</span>
+            <Select
+              defaultValue="TR"
+              style={{ width: 80 }}
+              onChange={handleChangeUILang}
+              options={[
+                { value: 'TR', label: 'TR' },
+                { value: 'EN', label: 'EN' },
+              ]}
+            />
+          </div>
+          <div>
+            <span>模式：</span>
+            <Radio.Group
+              buttonStyle="solid"
+              optionType="button"
+              options={copyModes}
+              value={copyMode}
+              onChange={handleChangeCopyMode}
+            ></Radio.Group>
+          </div>
+        </Space>
+        {/* 搜索框 */}
+        <div className={styles.search}>
+          <Search
+            placeholder={`输入${UILang}/ZH进行检索`}
+            allowClear
+            onSearch={onSearch}
+            onChange={handleInputKeywords}
+            style={{ width: 500 }}
+          />
+        </div>
+      </div>
+      {/* 翻译详情 */}
+      <div className={styles.langs}>
+        {Object.keys(langObj?.en || {})
+          .filter((key) => {
+            // 筛选选中的内容
+            return key;
+          })
+          .map((key) => {
+            return (
+              <LangItem
+                keyName={key}
+                zh={langObj?.['zh']?.[key] || ''}
+                en={langObj?.['en']?.[key] || ''}
+                tr={langObj?.['tr']?.[key] || ''}
+                UILang={UILang}
+                copyMode={copyMode}
+                key={key}
+                pageName={
+                  sheets.find((v) => v.sheetId === currentSheetId)?.sheetName ||
+                  ''
+                }
+                keywords={keywords}
+              ></LangItem>
+            );
+          })}
+      </div>
+    </div>
+  );
+};
+export default Dev;

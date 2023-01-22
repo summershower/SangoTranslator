@@ -18,13 +18,11 @@ export function format(params: {
   // 获取目标工作簿
   let currentActiveSheet;
   if (params?.sheetId) {
-    currentActiveSheet = window.luckysheet
-      .getAllSheets()
-      .find((v: any) => v.index === params?.sheetId).data;
+    currentActiveSheet = window.luckysheet.getSheet({
+      index: params.sheetId,
+    }).data;
   } else {
-    currentActiveSheet = window.luckysheet
-      .getAllSheets()
-      .find((v: any) => v.status).data;
+    currentActiveSheet = window.luckysheet.getSheetData();
   }
   // 去除表格空行
   for (let i = currentActiveSheet.length - 1; i >= 0; i--) {

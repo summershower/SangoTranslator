@@ -19,6 +19,7 @@ specifiers:
   eslint-linter-browserify: ^8.32.0
   husky: ^8.0.1
   js-beautify: ^1.14.7
+  jsondiffpatch: ^0.4.1
   lint-staged: ^13.0.3
   prettier: ^2.7.1
   prettier-plugin-organize-imports: ^2
@@ -40,6 +41,7 @@ dependencies:
   codemirror: 6.0.1
   eslint-linter-browserify: 8.32.0
   js-beautify: 1.14.7
+  jsondiffpatch: 0.4.1
 
 devDependencies:
   '@types/js-beautify': 1.13.3
@@ -2103,8 +2105,10 @@ packages:
       tinycolor2: 1.5.2
     dev: false
 
-  /@codemirror/autocomplete/6.4.0:
+  /@codemirror/autocomplete/6.4.0_@codemirror+state@6.2.0:
     resolution: {integrity: sha512-HLF2PnZAm1s4kGs30EiqKMgD7XsYaQ0XJnMR0rofEWQ5t5D60SfqpDIkIh1ze5tiEbyUWm8+VJ6W1/erVvBMIA==}
+    peerDependencies:
+      '@codemirror/state': ^6.0.0
     dependencies:
       '@codemirror/language': 6.4.0
       '@codemirror/state': 6.2.0
@@ -2124,7 +2128,7 @@ packages:
   /@codemirror/lang-javascript/6.1.2:
     resolution: {integrity: sha512-OcwLfZXdQ1OHrLiIcKCn7MqZ7nx205CMKlhe+vL88pe2ymhT9+2P+QhwkYGxMICj8TDHyp8HFKVwpiisUT7iEQ==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.0
+      '@codemirror/autocomplete': 6.4.0_@codemirror+state@6.2.0
       '@codemirror/language': 6.4.0
       '@codemirror/lint': 6.1.0
       '@codemirror/state': 6.2.0
@@ -4696,7 +4700,7 @@ packages:
   /codemirror/6.0.1:
     resolution: {integrity: sha512-J8j+nZ+CdWmIeFIGXEFbFPtpiYacFMDR8GlHK3IyHQJMCaVRfGx9NT+Hxivv1ckLWPvNdZqndbr/7lVhrf/Svg==}
     dependencies:
-      '@codemirror/autocomplete': 6.4.0
+      '@codemirror/autocomplete': 6.4.0_@codemirror+state@6.2.0
       '@codemirror/commands': 6.2.0
       '@codemirror/language': 6.4.0
       '@codemirror/lint': 6.1.0
@@ -5144,6 +5148,10 @@ packages:
 
   /detect-node/2.1.0:
     resolution: {integrity: sha512-T0NIuQpnTvFDATNuHN5roPwSBG83rFsuO+MXXH9/3N1eFbn4wcPjttvjMLEPWJ0RGUYgQE7cGgS3tNxbqCGM7g==}
+    dev: false
+
+  /diff-match-patch/1.0.5:
+    resolution: {integrity: sha512-IayShXAgj/QMXgB0IWmKx+rOPuGMhqm5w6jvFxmVenXKIzRqTAAsbBPT3kWQeGANj3jGgvcvv4yK6SxqYmikgw==}
     dev: false
 
   /diffie-hellman/5.0.3:
@@ -7073,6 +7081,16 @@ packages:
     engines: {node: '>=6'}
     hasBin: true
     dev: false
+
+  /jsondiffpatch/0.4.1:
+    resolution: {integrity: sha512-t0etAxTUk1w5MYdNOkZBZ8rvYYN5iL+2dHCCx/DpkFm/bW28M6y5nUS83D4XdZiHy35Fpaw6LBb+F88fHZnVCw==}
+    engines: {node: '>=8.17.0'}
+    hasBin: true
+    dependencies:
+      chalk: 2.4.2
+      diff-match-patch: 1.0.5
+    dev: false
+    bundledDependencies: []
 
   /jsonfile/6.1.0:
     resolution: {integrity: sha512-5dgndWOriYSm5cnYaJNhalLNDKOqFwyDB/rr1E9ZsGciGvKPs8R2xYGCacuf3z6K1YKDz182fd+fY3cn3pMqXQ==}

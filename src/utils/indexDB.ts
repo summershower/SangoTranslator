@@ -1,3 +1,4 @@
+import type { SheetFileData } from '@/Types/db';
 const storeName = 'sheet',
   dbName = 'SangoTranslator',
   version = 1;
@@ -36,7 +37,7 @@ export function initDB(): Promise<boolean> {
   });
 }
 
-// 增加数据
+// 增加表格数据
 export function add(data: any): void {
   const request = db
     .transaction(storeName, 'readwrite')
@@ -49,7 +50,7 @@ export function add(data: any): void {
     console.log(event, '写入失败');
   };
 }
-// 读取数据
+// 读取表格数据
 export function read(): Promise<[] | undefined> {
   return new Promise<[] | undefined>((resolve) => {
     const request = db
@@ -61,7 +62,7 @@ export function read(): Promise<[] | undefined> {
     };
   });
 }
-// 更新数据
+// 更新表格数据
 export function modify(data: any): void {
   const request = db
     .transaction(storeName, 'readwrite')
@@ -74,7 +75,7 @@ export function modify(data: any): void {
     console.log(event, '修改失败');
   };
 }
-// 删除数据
+// 删除表格数据
 export function del(id: number): void {
   const request = db
     .transaction(storeName, 'readwrite')
@@ -85,5 +86,28 @@ export function del(id: number): void {
   };
   request.onerror = (event) => {
     console.log(event, '删除失败');
+  };
+}
+
+// 读取储存的文件
+export function readFile(): Promise<[] | undefined> {
+  return new Promise<[] | undefined>((resolve) => {
+    const request = db.transaction(storeName).objectStore(storeName).getAll();
+    request.onsuccess = (r: any) => {
+      resolve(r?.target?.result as [] | undefined);
+    };
+  });
+}
+// 储存文件
+export function saveFile(data: SheetFileData) {
+  const request = db
+    .transaction(storeName, 'readwrite')
+    .objectStore(storeName)
+    .put(data, data.sheetId);
+  request.onsuccess = () => {
+    console.log('储存文件成功', request.result);
+  };
+  request.onerror = (event) => {
+    console.log(event, '储存文件失败');
   };
 }

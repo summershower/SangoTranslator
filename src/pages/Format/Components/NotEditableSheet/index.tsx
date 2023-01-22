@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import options from './options';
-import { initDB, read } from 'utils/indexDB';
+import { initDB, read } from '@/utils/indexDB';
 import styles from './index.less';
 const NotEditableSheet: React.FC<{
   setIsLoadedSheet: (status: boolean) => void;

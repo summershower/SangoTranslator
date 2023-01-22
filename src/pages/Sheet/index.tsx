@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 // import { usePrevious } from 'ahooks';
 import options from './options';
-import { initDB, read } from 'utils/indexDB';
+import { initDB, read } from '@/utils/indexDB';
 const Sheet: React.FC = () => {
   // const [width, setWidth] = useState(0); // 表格容器宽度
   // const [headerHeight, setHeaderHeight] = useState(0); // 表格头高度

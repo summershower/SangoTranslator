@@ -1,6 +1,6 @@
 import styles from './index.less';
 import { useEffect, forwardRef, useImperativeHandle } from 'react';
-import { format } from 'utils/format';
+import { format } from '@/utils/format';
 import { EditorView, basicSetup } from 'codemirror';
 import { javascript, esLint } from '@codemirror/lang-javascript';
 import { json, jsonParseLinter } from '@codemirror/lang-json';
@@ -8,7 +8,9 @@ import { solarizedLight } from 'cm6-theme-solarized-light';
 import { linter } from '@codemirror/lint';
 import * as eslint from 'eslint-linter-browserify';
 import { Button, Space, notification, Switch, Tooltip } from 'antd';
-import { autoTest } from 'utils/autoTest';
+import { autoTest } from '@/utils/autoTest';
+import { saveFile, readFile } from '@/utils/indexDB';
+import { SheetFileData } from '@/pages/Types/db';
 import {
   CopyOutlined,
   SaveOutlined,
@@ -16,7 +18,7 @@ import {
   LoadingOutlined,
   DownloadOutlined,
 } from '@ant-design/icons';
-import { copy, sleep, exportJS, exportJSON } from 'utils/common';
+import { copy, sleep, exportJS, exportJSON } from '@/utils/common';
 import { useState } from 'react';
 let view: EditorView;
 const CodePreview = forwardRef<
@@ -25,8 +27,8 @@ const CodePreview = forwardRef<
 >(({ isLoadedSheet }, refName) => {
   const [isPassedTest, setIsPaddedTest] = useState(false); // 是否通过测试
   const [isTesting, setIsTesting] = useState(false); // 是否测试中
-  const [formatMode, setFormatMode] = useState('JS'); // 格式化模式:JS/JSON
-  const [keyMode, setKeyMode] = useState('WORD'); // KEY值模式
+  const [formatMode, setFormatMode] = useState<'JS' | 'JSON'>('JS'); // 格式化模式:JS/JSON
+  const [keyMode, setKeyMode] = useState<'WORD' | 'INDEX'>('WORD'); // KEY值模式
 
   // 初始化编辑器
   function initEditor(content: string) {
@@ -148,6 +150,21 @@ const CodePreview = forwardRef<
       exportJSON(view.state.toJSON().doc);
     }
   }
+  // 保存文件
+  function handleSave() {
+    const data: SheetFileData = {
+      time: +new Date(),
+      sheetId: window.luckysheet.getSheet().index,
+      sheetName: window.luckysheet.getSheet().name,
+      [formatMode === 'JS' ? 'js' : 'json']: view.state.toJSON().doc,
+    };
+    saveFile(data);
+    setTimeout(() => {
+      readFile().then((res) => {
+        console.log(res);
+      });
+    }, 1000);
+  }
 
   // 初始化或设置更改时,重新格式化表格
   useEffect(() => {
@@ -224,6 +241,7 @@ const CodePreview = forwardRef<
               type="primary"
               icon={<SaveOutlined />}
               disabled={!isPassedTest}
+              onClick={handleSave}
             >
               {/* 提交 */}
             </Button>

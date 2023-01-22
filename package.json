@@ -23,7 +23,8 @@
     "cm6-theme-solarized-light": "^0.2.0",
     "codemirror": "^6.0.1",
     "eslint-linter-browserify": "^8.32.0",
-    "js-beautify": "^1.14.7"
+    "js-beautify": "^1.14.7",
+    "jsondiffpatch": "^0.4.1"
   },
   "devDependencies": {
     "@types/js-beautify": "^1.13.3",

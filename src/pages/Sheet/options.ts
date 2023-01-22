@@ -1,4 +1,4 @@
-import { modify } from 'utils/indexDB';
+import { modify } from '@/utils/indexDB';
 export default {
   lang: 'zh',
   container: 'sheetContainer',
