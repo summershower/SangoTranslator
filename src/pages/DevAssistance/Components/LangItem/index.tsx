@@ -1,4 +1,5 @@
 import { copy } from '@/utils/common';
+import { useEffect, memo, useRef } from 'react';
 import styles from './index.less';
 const LangItem: React.FC<{
   keyName: string;
@@ -9,30 +10,44 @@ const LangItem: React.FC<{
   pageName: string;
   copyMode: 'TEMPLATE' | 'JS' | 'TEMPLATEJS';
   keywords?: string;
-}> = ({ keyName, zh, tr, en, UILang, pageName, copyMode, keywords }) => {
-  function handleCopy() {
-    if (copyMode === 'TEMPLATE') {
-      copy(`{{ $t('${pageName}.${keyName}') }}`);
-    } else if (copyMode === 'JS') {
-      copy(`t('${pageName}.${keyName}')`);
-    } else if (copyMode === 'TEMPLATEJS') {
-      copy(`$t('${pageName}.${keyName}')`);
+}> = memo(
+  ({ keyName, zh, tr, en, UILang, pageName, copyMode, keywords = '' }) => {
+    function handleCopy() {
+      if (copyMode === 'TEMPLATE') {
+        copy(`{{ $t('${pageName}.${keyName}') }}`);
+      } else if (copyMode === 'JS') {
+        copy(`t('${pageName}.${keyName}')`);
+      } else if (copyMode === 'TEMPLATEJS') {
+        copy(`$t('${pageName}.${keyName}')`);
+      }
     }
-  }
-  function replaceKeywords(str: string): string {
-    let res = str;
-    if (keywords) {
-      res = str.replace(new RegExp(keywords, 'gi'), '<span>$&</span>');
+    const langRef = useRef<HTMLDivElement>(null);
+    const zhRef = useRef<HTMLDivElement>(null);
+
+    function highlight(dom: HTMLDivElement) {
+      const html = (dom.textContent as string).replace(
+        new RegExp(keywords, 'gi'),
+        `<span style='color: orange'>$&</span>`,
+      );
+      dom.innerHTML = html;
     }
-    return res;
-  }
-  return (
-    <div className={styles.langItem} onClick={handleCopy}>
-      <div className={styles.key}>
-        {UILang === 'TR' ? replaceKeywords(tr) : replaceKeywords(en)}
+    useEffect(() => {
+      highlight(langRef.current as HTMLDivElement);
+      highlight(zhRef.current as HTMLDivElement);
+    }, [keywords]);
+    return (
+      <div className={styles.langItem} onClick={handleCopy}>
+        <div className={styles.key} ref={langRef}>
+          {UILang === 'TR' ? tr : en}
+        </div>
+        <div className={styles.zh} ref={zhRef}>
+          {zh}
+        </div>
       </div>
-      <div className={styles.zh}>{replaceKeywords(zh)}</div>
-    </div>
-  );
-};
+    );
+  },
+  (pre, cur) => {
+    return pre.copyMode !== cur.copyMode;
+  },
+);
 export default LangItem;

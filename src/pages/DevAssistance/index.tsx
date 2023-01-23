@@ -1,5 +1,5 @@
 import { Select, Space, Divider, Radio, Input, RadioChangeEvent } from 'antd';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useDeferredValue, useRef } from 'react';
 import LangItem from './Components/LangItem';
 import styles from './index.less';
 import { readFile, initDB } from '@/utils/indexDB';
@@ -17,9 +17,10 @@ const Dev: React.FC = () => {
     'TEMPLATE',
   );
   const [UILang, setUILang] = useState<'TR' | 'EN'>('TR');
+  const deferredLangObj = useDeferredValue(langObj);
+  const searchRef = useRef(null);
   useNoPadding();
   function getLangs() {
-    console.log(sheets);
     const targetSheet = sheets.find((v) => v.sheetId === currentSheetId);
     if (targetSheet?.json) {
       setLangObj(JSON.parse(targetSheet.json));
@@ -51,17 +52,18 @@ const Dev: React.FC = () => {
   }
   function handleChangeCopyMode(e: RadioChangeEvent) {
     setCopyMode(e.target.value);
+    setKeywords('');
   }
   function handleChangeUILang(v: 'TR' | 'EN') {
     setUILang(v);
+    setKeywords('');
   }
   const copyModes = [
     { label: '模板', value: 'TEMPLATE' },
-    { label: '模板JS', value: 'TEMPLATEJS' },
+    // { label: '模板JS', value: 'TEMPLATEJS' },
     { label: 'JS', value: 'JS' },
   ];
 
-  function onSearch() {}
   function handleInputKeywords(e: any) {
     setKeywords(e.target.value.trim());
   }
@@ -76,6 +78,7 @@ const Dev: React.FC = () => {
               defaultValue={currentSheetId}
               style={{ width: 200 }}
               onChange={handleChangeSheet}
+              key={currentSheetId}
               options={sheets.map((v) => {
                 return {
                   value: v.sheetId,
@@ -113,26 +116,33 @@ const Dev: React.FC = () => {
           <Search
             placeholder={`输入${UILang}/ZH进行检索`}
             allowClear
-            onSearch={onSearch}
             onChange={handleInputKeywords}
+            enterButton
+            key={UILang + copyMode}
+            ref={searchRef}
             style={{ width: 500 }}
           />
         </div>
       </div>
       {/* 翻译详情 */}
       <div className={styles.langs}>
-        {Object.keys(langObj?.en || {})
+        {Object.keys(deferredLangObj?.en || {})
           .filter((key) => {
             // 筛选选中的内容
-            return key;
+            return (
+              deferredLangObj?.['zh']?.[key]?.includes(keywords) ||
+              deferredLangObj?.[UILang.toLocaleLowerCase() as 'en' | 'tr']?.[
+                key
+              ]?.includes(keywords)
+            );
           })
           .map((key) => {
             return (
               <LangItem
                 keyName={key}
-                zh={langObj?.['zh']?.[key] || ''}
-                en={langObj?.['en']?.[key] || ''}
-                tr={langObj?.['tr']?.[key] || ''}
+                zh={deferredLangObj?.['zh']?.[key] || ''}
+                en={deferredLangObj?.['en']?.[key] || ''}
+                tr={deferredLangObj?.['tr']?.[key] || ''}
                 UILang={UILang}
                 copyMode={copyMode}
                 key={key}
