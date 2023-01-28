@@ -93,8 +93,11 @@ export default defineConfig({
     },
     {
       src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js',
-    },
-  ], // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
+    }, // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
+    {
+      src: 'https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js'
+    } // 引入jsondiffpatch
+  ],
   // 部署Git Page相关配置
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
   publicPath: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',

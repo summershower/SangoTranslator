@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { LangObject } from '@/pages/Types';
+import { LangObject } from '@/Types';
 export function copy(text: string): void {
   try {
     const textarea = document.createElement('textarea'); // js创建一个input输入框

@@ -10,7 +10,7 @@ import * as eslint from 'eslint-linter-browserify';
 import { Button, Space, notification, Switch, Tooltip } from 'antd';
 import { autoTest } from '@/utils/autoTest';
 import { saveFile, readFile } from '@/utils/indexDB';
-import { SheetFileData } from '@/pages/Types/db';
+import { SheetFileData } from '@/Types/db';
 import {
   CopyOutlined,
   SaveOutlined,

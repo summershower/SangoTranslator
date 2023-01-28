@@ -2,14 +2,15 @@ import { Select, Space, Divider, Radio, Input, RadioChangeEvent } from 'antd';
 import { useState, useEffect, useDeferredValue, useRef } from 'react';
 import LangItem from './Components/LangItem';
 import styles from './index.less';
-import { readFile, initDB } from '@/utils/indexDB';
-import type { SheetFileData } from '../Types/db';
-import type { LangObject } from '../Types';
+// import { readFile, initDB } from '@/utils/indexDB';
+// import type { SheetFileData } from '../../Types/db';
+import type { LangObject } from '../../Types';
 import { JSToObject } from '@/utils/common';
 import useNoPadding from '@/hooks/useNoPadding';
+import useLocalSheets from '@/hooks/useLocalSheets';
 const { Search } = Input;
 const Dev: React.FC = () => {
-  const [sheets, setSheets] = useState<SheetFileData[]>([]);
+  // const [sheets, setSheets] = useState<SheetFileData[]>([]);
   const [currentSheetId, setCurrentSheetId] = useState('');
   const [langObj, setLangObj] = useState<LangObject>();
   const [keywords, setKeywords] = useState('');
@@ -20,6 +21,8 @@ const Dev: React.FC = () => {
   const deferredLangObj = useDeferredValue(langObj);
   const searchRef = useRef(null);
   useNoPadding();
+  const sheets = useLocalSheets();
+
   function getLangs() {
     const targetSheet = sheets.find((v) => v.sheetId === currentSheetId);
     if (targetSheet?.json) {
@@ -32,18 +35,8 @@ const Dev: React.FC = () => {
     }
   }
   useEffect(() => {
-    initDB().then(() => {
-      readFile().then((res: any) => {
-        const sheets: SheetFileData[] = Array.isArray(res)
-          ? res.filter((v) => v?.js || v?.json).sort((a, b) => b.time - a.time)
-          : [];
-        if (sheets.length) {
-          setCurrentSheetId(sheets[0].sheetId);
-          setSheets(sheets);
-        }
-      });
-    });
-  }, []);
+    sheets?.[0] && setCurrentSheetId(sheets[0].sheetId);
+  }, [sheets])
   useEffect(() => {
     getLangs();
   }, [currentSheetId]);

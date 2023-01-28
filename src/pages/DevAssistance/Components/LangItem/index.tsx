@@ -13,6 +13,8 @@ const LangItem: React.FC<{
 }> = memo(
   ({ keyName, zh, tr, en, UILang, pageName, copyMode, keywords = '' }) => {
     function handleCopy() {
+      // TODO 占位符替换
+      // const placeholderReg = /{.*}/g;
       if (copyMode === 'TEMPLATE') {
         copy(`{{ $t('${pageName}.${keyName}') }}`);
       } else if (copyMode === 'JS') {
