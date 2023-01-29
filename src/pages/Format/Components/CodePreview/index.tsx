@@ -9,7 +9,7 @@ import { linter } from '@codemirror/lint';
 import * as eslint from 'eslint-linter-browserify';
 import { Button, Space, notification, Switch, Tooltip } from 'antd';
 import { autoTest } from '@/utils/autoTest';
-import { saveFile, readFile } from '@/utils/indexDB';
+import { saveFile } from '@/utils/indexDB';
 import { SheetFileData } from '@/Types/db';
 import {
   CopyOutlined,
@@ -20,6 +20,7 @@ import {
 } from '@ant-design/icons';
 import { copy, sleep, exportJS, exportJSON } from '@/utils/common';
 import { useState } from 'react';
+import { readSheetSettings, saveSheetSettings } from '@/utils/storage';
 let view: EditorView;
 const CodePreview = forwardRef<
   { formatSheet: (index?: string) => void },
@@ -72,6 +73,20 @@ const CodePreview = forwardRef<
   }
   // 格式化表格内容
   function formatSheet(index?: string) {
+    // 获取表格默认设置
+    const currentKeyMode =
+      readSheetSettings(
+        index || window.luckysheet.getSheet().index,
+        'keyMode',
+      ) || 'WORD';
+    const currentFormatMode =
+      readSheetSettings(
+        index || window.luckysheet.getSheet().index,
+        'formatMode',
+      ) || 'JS';
+    setKeyMode(currentKeyMode);
+    setFormatMode(currentFormatMode);
+    if (currentKeyMode !== keyMode || currentFormatMode !== formatMode) return;
     const [rawStr, JSONStr] = format({ sheetId: index, keyMode });
     if (rawStr.length && !JSONStr) {
       notification.error({
@@ -162,20 +177,38 @@ const CodePreview = forwardRef<
     notification.success({
       message: '保存成功',
     });
-    setTimeout(() => {
-      readFile().then((res) => {
-        console.log(res);
-      });
-    }, 1000);
+    // setTimeout(() => {
+    //   readFile().then((res) => {
+    //     console.log(res);
+    //   });
+    // }, 1000);
+  }
+  // 切换格式化模式
+  function handleSwitchFormatMode() {
+    setFormatMode((pre) => (pre === 'JS' ? 'JSON' : 'JS'));
+    saveSheetSettings(
+      window.luckysheet.getSheet().index,
+      'formatMode',
+      formatMode === 'JS' ? 'JSON' : 'JS',
+    );
+  }
+  // 切换KEY值模式
+  function handleSwitchKeyMode() {
+    setKeyMode((pre) => (pre === 'WORD' ? 'INDEX' : 'WORD'));
+    saveSheetSettings(
+      window.luckysheet.getSheet().index,
+      'keyMode',
+      keyMode === 'WORD' ? 'INDEX' : 'WORD',
+    );
   }
 
-  // 初始化或设置更改时,重新格式化表格
+  // luckysheet初始化完成, 或者更改模式设置, 立即格式化表格
   useEffect(() => {
     if (isLoadedSheet) {
       formatSheet();
     }
   }, [isLoadedSheet, formatMode, keyMode]);
-  // 暴露格式化文档方法
+  // 暴露重新格式化文档方法
   useImperativeHandle(
     refName,
     () => {
@@ -188,6 +221,10 @@ const CodePreview = forwardRef<
   return (
     <div className={styles.codeBox}>
       <div className={styles.code} id="code"></div>
+      <h1>
+        {keyMode}
+        {formatMode}
+      </h1>
       <div className={styles.status}>
         <Space size={8}>
           <Tooltip
@@ -195,22 +232,20 @@ const CodePreview = forwardRef<
             title="切换KEY值命名模式, 单词模式书写时语义会更清晰, 但如果英文文案后期有修改, KEY值可能有变动"
           >
             <Switch
+              checked={keyMode === 'WORD'}
               checkedChildren="Words"
               unCheckedChildren="Index"
               defaultChecked
-              onChange={() =>
-                setKeyMode((pre) => (pre === 'WORD' ? 'INDEX' : 'WORD'))
-              }
+              onChange={handleSwitchKeyMode}
             />
           </Tooltip>
           <Tooltip placement="bottomRight" title="切换JS/JSON格式">
             <Switch
+              checked={formatMode === 'JS'}
               checkedChildren="JS"
               unCheckedChildren="JSON"
               defaultChecked
-              onChange={() =>
-                setFormatMode((pre) => (pre === 'JS' ? 'JSON' : 'JS'))
-              }
+              onChange={handleSwitchFormatMode}
             />
           </Tooltip>
           <Tooltip placement="bottomRight" title="下载">

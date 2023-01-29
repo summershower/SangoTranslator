@@ -8,6 +8,7 @@ import type { LangObject } from '../../Types';
 import { JSToObject } from '@/utils/common';
 import useNoPadding from '@/hooks/useNoPadding';
 import useLocalSheets from '@/hooks/useLocalSheets';
+import { saveSheetSettings, readSheetSettings } from '@/utils/storage';
 const { Search } = Input;
 const Dev: React.FC = () => {
   // const [sheets, setSheets] = useState<SheetFileData[]>([]);
@@ -18,6 +19,7 @@ const Dev: React.FC = () => {
     'TEMPLATE',
   );
   const [UILang, setUILang] = useState<'TR' | 'EN'>('TR');
+  const [prefix, setPrefix] = useState('');
   const deferredLangObj = useDeferredValue(langObj);
   const searchRef = useRef(null);
   useNoPadding();
@@ -34,6 +36,10 @@ const Dev: React.FC = () => {
       });
     }
   }
+  function handleInputPrefix(e) {
+    setPrefix(e.target.value.trim());
+    saveSheetSettings(currentSheetId, 'prefix', e.target.value.trim());
+  }
   useEffect(() => {
     if (sheets?.[0]) {
       setCurrentSheetId(sheets[0].sheetId);
@@ -41,6 +47,12 @@ const Dev: React.FC = () => {
   }, [sheets]);
   useEffect(() => {
     getLangs();
+    setPrefix(
+      readSheetSettings(currentSheetId, 'prefix') ||
+        sheets?.find((v) => v.sheetId === currentSheetId)?.sheetName ||
+        '',
+    );
+    setUILang(readSheetSettings(currentSheetId, 'UILang') || 'TR');
   }, [currentSheetId]);
   function handleChangeSheet(v: string) {
     setCurrentSheetId(v);
@@ -52,6 +64,7 @@ const Dev: React.FC = () => {
   function handleChangeUILang(v: 'TR' | 'EN') {
     setUILang(v);
     setKeywords('');
+    saveSheetSettings(currentSheetId, 'UILang', v);
   }
   const copyModes = [
     { label: '模板', value: 'TEMPLATE' },
@@ -83,11 +96,16 @@ const Dev: React.FC = () => {
             />
           </div>
 
+          <div style={{ display: 'flex', alignItems: 'center' }}>
+            <span style={{ width: '45px' }}>前缀: </span>
+            <Input value={prefix} onChange={handleInputPrefix} />
+          </div>
+
           <div>
-            <span>UI语言：</span>
+            <span>UI语言: </span>
             <Select
-              defaultValue="TR"
-              style={{ width: 80 }}
+              value={UILang}
+              style={{ width: 60 }}
               onChange={handleChangeUILang}
               options={[
                 { value: 'TR', label: 'TR' },
@@ -143,10 +161,7 @@ const Dev: React.FC = () => {
                 UILang={UILang}
                 copyMode={copyMode}
                 key={key}
-                pageName={
-                  sheets.find((v) => v.sheetId === currentSheetId)?.sheetName ||
-                  ''
-                }
+                pageName={prefix || ''}
                 keywords={keywords}
               ></LangItem>
             );
