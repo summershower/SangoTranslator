@@ -35,8 +35,10 @@ const Dev: React.FC = () => {
     }
   }
   useEffect(() => {
-    sheets?.[0] && setCurrentSheetId(sheets[0].sheetId);
-  }, [sheets])
+    if (sheets?.[0]) {
+      setCurrentSheetId(sheets[0].sheetId);
+    }
+  }, [sheets]);
   useEffect(() => {
     getLangs();
   }, [currentSheetId]);
@@ -53,8 +55,8 @@ const Dev: React.FC = () => {
   }
   const copyModes = [
     { label: '模板', value: 'TEMPLATE' },
-    // { label: '模板JS', value: 'TEMPLATEJS' },
     { label: 'JS', value: 'JS' },
+    { label: '模板JS', value: 'TEMPLATEJS' },
   ];
 
   function handleInputKeywords(e: any) {
@@ -123,10 +125,12 @@ const Dev: React.FC = () => {
           .filter((key) => {
             // 筛选选中的内容
             return (
-              deferredLangObj?.['zh']?.[key]?.includes(keywords) ||
-              deferredLangObj?.[UILang.toLocaleLowerCase() as 'en' | 'tr']?.[
-                key
-              ]?.includes(keywords)
+              deferredLangObj?.['zh']?.[key]
+                ?.toLowerCase()
+                ?.includes(keywords.toLowerCase()) ||
+              deferredLangObj?.[UILang.toLowerCase() as 'en' | 'tr']?.[key]
+                ?.toLowerCase()
+                ?.includes(keywords.toLowerCase())
             );
           })
           .map((key) => {

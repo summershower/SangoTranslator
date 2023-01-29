@@ -159,6 +159,9 @@ const CodePreview = forwardRef<
       [formatMode === 'JS' ? 'js' : 'json']: view.state.toJSON().doc,
     };
     saveFile(data);
+    notification.success({
+      message: '保存成功',
+    });
     setTimeout(() => {
       readFile().then((res) => {
         console.log(res);
