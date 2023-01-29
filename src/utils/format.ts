@@ -127,6 +127,7 @@ export function format(params: {
         .replace(/[^a-zA-Z0-9 ]/g, ' ')
         .trim()
         .split(' ');
+
       let currentKey = '';
       if (params.keyMode === 'WORD') {
         for (let i = 0; i < Math.min(6, wordsArr.length); i++) {
@@ -134,7 +135,7 @@ export function format(params: {
           if (
             !wordsArr[i] ||
             wordsArr[i] === ' ' ||
-            (!currentKey.length && /^[0-9]+$/.test(wordsArr[i]))
+            (!currentKey.length && /^[0-9]+.*$/.test(wordsArr[i]))
           )
             continue;
           // 禁止时间数字连体
