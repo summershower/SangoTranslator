@@ -26,30 +26,30 @@ export default defineConfig({
       component: './Format',
       icon: 'CodeOutlined',
     },
-    {
-      name: '推送',
-      path: '/push',
-      component: './Push',
-      icon: 'CloudUploadOutlined',
-    },
+    // {
+    //   name: '推送',
+    //   path: '/push',
+    //   component: './Push',
+    //   icon: 'CloudUploadOutlined',
+    // },
     {
       name: '开发',
       path: '/dev',
       component: './DevAssistance',
       icon: 'CodeSandboxOutlined',
     },
-    {
-      name: '历史',
-      path: '/history',
-      component: './History',
-      icon: 'FieldTimeOutlined',
-    },
-    {
-      name: '权限',
-      path: '/permissions',
-      component: './Permissions',
-      icon: 'UsergroupAddOutlined',
-    },
+    // {
+    //   name: '历史',
+    //   path: '/history',
+    //   component: './History',
+    //   icon: 'FieldTimeOutlined',
+    // },
+    // {
+    //   name: '权限',
+    //   path: '/permissions',
+    //   component: './Permissions',
+    //   icon: 'UsergroupAddOutlined',
+    // },
     // {
     //   name: '首页',
     //   path: '/home',
@@ -95,8 +95,8 @@ export default defineConfig({
       src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js',
     }, // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
     {
-      src: 'https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js'
-    } // 引入jsondiffpatch
+      src: 'https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js',
+    }, // 引入jsondiffpatch
   ],
   // 部署Git Page相关配置
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',

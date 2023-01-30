@@ -221,10 +221,6 @@ const CodePreview = forwardRef<
   return (
     <div className={styles.codeBox}>
       <div className={styles.code} id="code"></div>
-      <h1>
-        {keyMode}
-        {formatMode}
-      </h1>
       <div className={styles.status}>
         <Space size={8}>
           <Tooltip
