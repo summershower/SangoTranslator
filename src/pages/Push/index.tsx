@@ -78,7 +78,7 @@ const Push: React.FC = () => {
     setCurrentSheetId(v);
   }
   async function handleUpload() {
-    if (!uploadDirectory) {
+    if (!uploadDirectory && !currentSheetCloudInfo) {
       return notification.error({
         message: '请输入推送路径',
       });

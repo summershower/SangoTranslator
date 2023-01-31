@@ -43,14 +43,12 @@ export function saveCloudFile(file: CloudFile) {
           ...JSON.parse(s).filter((v: CloudFile) => v.sheetId !== file.sheetId),
         ]
       : [file];
-    console.log(files);
     localStorage.setItem('cloudSheet', JSON.stringify(files));
   } catch {}
 }
 export function readCloudFiles() {
   try {
     let s = localStorage.getItem('cloudSheet');
-    console.log(s);
     let arr: CloudFile[] = s ? JSON.parse(s) : [];
     return arr;
   } catch {
