@@ -17,7 +17,7 @@
     "@codemirror/lang-json": "^6.0.1",
     "@codemirror/lint": "^6.1.0",
     "@codemirror/state": "^6.2.0",
-    "@umijs/max": "^4.0.42",
+    "@umijs/max": "^4.0.47",
     "ahooks": "^3.7.4",
     "ali-oss": "^6.17.1",
     "antd": "^5.0.0",

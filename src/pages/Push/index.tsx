@@ -139,16 +139,17 @@ const Push: React.FC = () => {
   function formatTime(timestamp: number, isCloud = false): string {
     if (!timestamp) return '';
     return (
-      `${isCloud ? '上传' : '修改'}时间：` +
+      `${isCloud ? '上传' : '暂存'}时间：` +
       dayjs(timestamp).format('YYYY-MM-DD HH:mm:ss') +
       '(' +
       dayjs(timestamp).fromNow() +
-      ')' +
-      (isCloud && currentSheetCloudInfo
-        ? ''
-        : ' (相对于云端: ' +
-          dayjs(timestamp).from(currentSheetCloudInfo.modifyTime) +
-          ')')
+      ')'
+      // +
+      // (isCloud && currentSheetCloudInfo
+      //   ? ''
+      //   : ' (相对于云端: ' +
+      //     dayjs(timestamp).from(currentSheetCloudInfo.modifyTime) +
+      //     ')')
     );
   }
 
@@ -158,7 +159,7 @@ const Push: React.FC = () => {
         <Space align="end" size="large">
           {/* 工作表选择框 */}
           <div>
-            <span>选择工作表：</span>
+            <span>暂存区文件：</span>
             <Select
               defaultValue={currentSheetId}
               key={currentSheetId}

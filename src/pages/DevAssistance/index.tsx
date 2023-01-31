@@ -81,7 +81,7 @@ const Dev: React.FC = () => {
       <div className={styles.status}>
         <Space split={<Divider type="vertical" />}>
           <div>
-            <span>选择工作表：</span>
+            <span>暂存区文件：</span>
             <Select
               defaultValue={currentSheetId}
               style={{ width: 200 }}

@@ -33,3 +33,10 @@ export type CloudFile = {
   modifyTime: number;
   formatMode: 'JS' | 'JSON';
 };
+
+export type History = {
+  time: number;
+  operator: string;
+  sheetId: string;
+  action: string;
+};
