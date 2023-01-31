@@ -59,7 +59,9 @@ const Push: React.FC = () => {
       setCurrentSheetCloudInfo(cloudFile);
       const code: string = await request(cloudFile.url);
       message.destroy();
-      diffCode(code);
+      diffCode(
+        cloudFile.formatMode === 'JS' ? code : JSON.stringify(code, null, 2),
+      );
     } else {
       setCurrentSheetCloudInfo(null);
       diffCode();
@@ -97,7 +99,7 @@ const Push: React.FC = () => {
       });
       const oss = await initOSS();
       const directoryMatchRef =
-        /(?<=sango-frankfurt.oss-accelerate.aliyuncs.com\/web\/).+(?=\/)/gi;
+        /(?<=sango-frankfurt.oss-accelerate.aliyuncs.com\/web\/test\/langTest\/).+(?=\/)/gi;
       const directory = currentSheetCloudInfo?.url
         ? currentSheetCloudInfo.url.match(directoryMatchRef)?.[0]
         : uploadDirectory.trim();
@@ -111,6 +113,7 @@ const Push: React.FC = () => {
         url: url,
         modifyTime: +new Date(),
         sheetId: currentSheetId,
+        formatMode: currentSheet?.js ? 'JS' : 'JSON',
       });
       notification.success({
         message: '推送成功',

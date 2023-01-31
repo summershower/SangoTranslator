@@ -31,4 +31,5 @@ export type CloudFile = {
   sheetId: string;
   url: string;
   modifyTime: number;
+  formatMode: 'JS' | 'JSON';
 };
