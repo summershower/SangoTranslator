@@ -1,4 +1,4 @@
-import type { SheetFileData } from '@/Types/db';
+import type { SheetFileData } from '@/Types';
 const storeName = 'sheet',
   dbName = 'SangoTranslator',
   version = 1;

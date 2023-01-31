@@ -8,3 +8,27 @@ export type SheetSettings = {
   keyMode: 'INDEX' | 'WORD';
   formatMode: 'JS' | 'JSON';
 };
+
+export interface OSSConfig {
+  accessKeyId: string;
+  aLiYunHost: string;
+  bucketName: string;
+  securityToken: string;
+  accessKeySecret: string;
+  objectName: string;
+  url: string;
+}
+
+export type SheetFileData = {
+  sheetId: string;
+  sheetName: string;
+  time: number;
+  js?: string;
+  json?: string;
+};
+
+export type CloudFile = {
+  sheetId: string;
+  url: string;
+  modifyTime: number;
+};

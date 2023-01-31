@@ -1,9 +1,9 @@
-import type { SheetSettings } from '@/Types';
+import type { SheetSettings, CloudFile } from '@/Types';
 const defaultSettings: SheetSettings = {
   UILang: 'TR',
   prefix: '',
   keyMode: 'WORD',
-  formatType: 'JS',
+  formatMode: 'JS',
 };
 export function saveSheetSettings<
   K extends keyof SheetSettings,
@@ -32,4 +32,28 @@ export function readSheetSettings<K extends keyof SheetSettings>(
     let obj: SheetSettings = s ? JSON.parse(s) : defaultSettings;
     return obj[key];
   } catch {}
+}
+
+export function saveCloudFile(file: CloudFile) {
+  try {
+    let s = localStorage.getItem('cloudSheet');
+    let files: CloudFile[] = s
+      ? [
+          file,
+          ...JSON.parse(s).filter((v: CloudFile) => v.sheetId !== file.sheetId),
+        ]
+      : [file];
+    console.log(files);
+    localStorage.setItem('cloudSheet', JSON.stringify(files));
+  } catch {}
+}
+export function readCloudFiles() {
+  try {
+    let s = localStorage.getItem('cloudSheet');
+    console.log(s);
+    let arr: CloudFile[] = s ? JSON.parse(s) : [];
+    return arr;
+  } catch {
+    return [];
+  }
 }

@@ -1,18 +1,59 @@
-.diff,
-.time {
+.topBar {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 3;
+  padding: 20px 24px 10px;
+  background: rgb(255 255 255 / 70%);
+  backdrop-filter: blur(10px);
+  backdrop-filter: blur(5px);
+  border-radius: 10px;
+}
+
+.history {
+  margin-top: 10px;
+  color: #666;
+
+  &.flex {
     display: flex;
-    width: 80%;
+  }
 }
 
-.changeTime,
-.uploadTime {
-    flex: 1;
+.path {
+  span {
+    margin-right: 10px;
+  }
 }
-.local,
-.cloud {
-    flex: 1;
-    background: rgb(105, 105, 49);
-    height: 60vh;
-    border-radius: 10px;
 
+.url {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+  cursor: pointer;
+}
+
+.time {
+  display: flex;
+
+  span {
+    flex: 1;
+  }
+}
+
+.empty {
+  position: absolute;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 75vh;
+  width: 100%;
+  font-size: 32px;
+  color: rgb(211 211 211);
+}
+
+.diffBox {
+  position: relative;
+  z-index: 1;
 }

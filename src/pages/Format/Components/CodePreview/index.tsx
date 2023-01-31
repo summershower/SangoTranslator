@@ -10,7 +10,7 @@ import * as eslint from 'eslint-linter-browserify';
 import { Button, Space, notification, Switch, Tooltip } from 'antd';
 import { autoTest } from '@/utils/autoTest';
 import { saveFile } from '@/utils/indexDB';
-import { SheetFileData } from '@/Types/db';
+import { SheetFileData } from '@/Types';
 import {
   CopyOutlined,
   SaveOutlined,
@@ -141,7 +141,7 @@ const CodePreview = forwardRef<
         setIsTesting(false);
         notification.success({
           message: '已通过测试',
-          description: '可以执行推送操作',
+          description: '可以执行暂存操作',
         });
       })
       .catch((e: string) => {
@@ -175,7 +175,7 @@ const CodePreview = forwardRef<
     };
     saveFile(data);
     notification.success({
-      message: '保存成功',
+      message: '暂存成功, 可以前往推送面板',
     });
     // setTimeout(() => {
     //   readFile().then((res) => {
@@ -269,7 +269,7 @@ const CodePreview = forwardRef<
           )}
           <Tooltip
             placement="bottomRight"
-            title={isPassedTest ? '提交该文件' : '提交该文件(需要先通过测试)'}
+            title={isPassedTest ? '暂存该文件' : '暂存该文件(需要先通过测试)'}
           >
             <Button
               type="primary"

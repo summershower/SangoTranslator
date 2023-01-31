@@ -26,12 +26,12 @@ export default defineConfig({
       component: './Format',
       icon: 'CodeOutlined',
     },
-    // {
-    //   name: '推送',
-    //   path: '/push',
-    //   component: './Push',
-    //   icon: 'CloudUploadOutlined',
-    // },
+    {
+      name: '推送',
+      path: '/push',
+      component: './Push',
+      icon: 'CloudUploadOutlined',
+    },
     {
       name: '开发',
       path: '/dev',
@@ -70,6 +70,7 @@ export default defineConfig({
   clickToComponent: { editor: 'vscode' }, // 点击Alt+Click跳转到源码位置
   favicons: ['https://cdn.meiqijiacheng.com/h5-deploy/favicon.ico'], // 网站图标
   links: [
+    // 引入luckysheet样式文件
     {
       href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/css/pluginsCss.css',
       rel: 'stylesheet',
@@ -86,17 +87,25 @@ export default defineConfig({
       href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/assets/iconfont/iconfont.css',
       rel: 'stylesheet',
     },
-  ], // 引入luckysheet样式文件
+    //
+    // 引入diff2html样式文件
+    {
+      href: 'https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css',
+      rel: 'stylesheet',
+    },
+  ],
   headScripts: [
+    // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
     {
       src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/js/plugin.js',
     },
     {
       src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js',
-    }, // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
+    },
+    // 引入diff2html文件
     {
-      src: 'https://cdn.jsdelivr.net/npm/jsondiffpatch/dist/jsondiffpatch.umd.min.js',
-    }, // 引入jsondiffpatch
+      src: 'https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js',
+    },
   ],
   // 部署Git Page相关配置
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
