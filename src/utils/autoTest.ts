@@ -15,6 +15,7 @@ export function autoTest(
         const zhKeys = Object.keys(lang_zh);
         const trKeys = Object.keys(lang_tr);
         const urKeys = Object.keys(lang_ur);
+        const inKeys = Object.keys(lang_in);
         if(enKeys.length !== arKeys.length) {
           throw new Error('阿语KEY数量有误, 英语KEY:' + enKeys.length + ',阿语KEY:'+arKeys.length );
         }
@@ -26,6 +27,9 @@ export function autoTest(
         }
         if(enKeys.length !== trKeys.length) {
           throw new Error('土耳其语KEY数量有误, 英语KEY:' + enKeys.length + ',土耳其语KEY:'+trKeys.length );
+        }
+        if(enKeys.length !== inKeys.length && inKeys.length) {
+          throw new Error('印尼语语KEY数量有误, 英语KEY:' + enKeys.length + ',印尼语语KEY:'+inKeys.length );
         }
         Object.entries(lang_zh).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('中文KEY值不一致:'+enKeys[index] + '!==' + key);
@@ -43,6 +47,10 @@ export function autoTest(
         Object.entries(lang_tr).forEach(([key,value], index)=>{
           if(enKeys[index] !== key) throw new Error('乌尔都KEY值不一致:'+enKeys[index] + '!==' + key);
           if(typeof value !== 'string') throw new Error('乌尔都VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
+        })
+        Object.entries(lang_in).forEach(([key,value], index)=>{
+          if(enKeys[index] !== key) throw new Error('印尼语KEY值不一致:'+enKeys[index] + '!==' + key);
+          if(typeof value !== 'string') throw new Error('印尼语VALUE类型有误, 请检查该KEY值:'+enKeys[index]);
         })
         window.iframePassedTest();
        } catch(err) {
@@ -93,6 +101,7 @@ export function autoTest(
         const zhKeys = Object.keys(obj.zh);
         const trKeys = Object.keys(obj.tr);
         const urKeys = Object.keys(obj.ur);
+        const inKeys = Object.keys(obj.in);
         if (enKeys.length !== arKeys.length) {
           reject(
             '阿语KEY数量有误, 英语KEY:' +
@@ -125,6 +134,14 @@ export function autoTest(
               trKeys.length,
           );
         }
+        if (enKeys.length !== inKeys.length && inKeys.length) {
+          reject(
+            '印尼语KEY数量有误, 英语KEY:' +
+              enKeys.length +
+              ',印尼语KEY:' +
+              inKeys.length,
+          );
+        }
         Object.entries(obj.zh).forEach(([key, value], index) => {
           if (enKeys[index] !== key)
             reject('中文KEY值不一致:' + enKeys[index] + '!==' + key);
@@ -147,9 +164,15 @@ export function autoTest(
         });
         Object.entries(obj.tr).forEach(([key, value], index) => {
           if (enKeys[index] !== key)
-            reject('乌尔都KEY值不一致:' + enKeys[index] + '!==' + key);
+            reject('乌尔都语KEY值不一致:' + enKeys[index] + '!==' + key);
           if (typeof value !== 'string')
-            reject('乌尔都VALUE类型有误, 请检查该KEY值:' + enKeys[index]);
+            reject('乌尔都语VALUE类型有误, 请检查该KEY值:' + enKeys[index]);
+        });
+        Object.entries(obj.in).forEach(([key, value], index) => {
+          if (enKeys[index] !== key)
+            reject('印尼语KEY值不一致:' + enKeys[index] + '!==' + key);
+          if (typeof value !== 'string')
+            reject('印尼语VALUE类型有误, 请检查该KEY值:' + enKeys[index]);
         });
         resolve(true);
       } catch (e) {

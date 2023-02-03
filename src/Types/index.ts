@@ -1,5 +1,7 @@
+export type Langs = 'en' | 'ar' | 'tr' | 'ur' | 'in' | 'zh';
+
 export type LangObject = {
-  [key in 'en' | 'zh' | 'ar' | 'ur' | 'tr']: Record<string, string>;
+  [key in 'en' | 'zh' | 'ar' | 'ur' | 'tr' | 'in']: Record<string, string>;
 };
 
 export type SheetSettings = {

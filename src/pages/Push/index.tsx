@@ -18,7 +18,7 @@ const Push: React.FC = () => {
   const [uploadDirectory, setUploadDirectory] = useState(''); // 上传目录
   const [isUploading, setIsUploading] = useState(false); // 是否正在上传
   const [currentSheetCloudInfo, setCurrentSheetCloudInfo] =
-    useState<CloudFile>(null); // 当前工作表云端信息
+    useState<CloudFile | null>(null); // 当前工作表云端信息
 
   // 对比内容
   async function diffCode(oldCode = '') {
@@ -99,12 +99,12 @@ const Push: React.FC = () => {
       });
       const oss = await initOSS();
       const directoryMatchRef =
-        /(?<=sango-frankfurt.oss-accelerate.aliyuncs.com\/web\/test\/langTest\/).+(?=\/)/gi;
+        /(?<=sango-frankfurt.oss-accelerate.aliyuncs.com\/web\/H5ActivityTranslations\/).+(?=\/)/gi;
       const directory = currentSheetCloudInfo?.url
         ? currentSheetCloudInfo.url.match(directoryMatchRef)?.[0]
         : uploadDirectory.trim();
       const { url } = await oss.put(
-        `/web/test/langTest/${directory}/lang.${
+        `/web/H5ActivityTranslations/${directory}/lang.${
           currentSheet?.js ? 'js' : 'json'
         }`,
         file,

@@ -1,6 +1,8 @@
 import { frontEndJsTemplate } from './codeTemplate';
-import { isTr, isUr, isAr, isZh, isEn } from '@/utils/regMatch';
+import { isTr, isUr, isAr, isZh, isEn, isLikeIn } from '@/utils/regMatch';
+import type { Langs } from '@/Types';
 import JSBeautify from 'js-beautify';
+
 // 格式化表格数据
 export function format(params: {
   sheetId?: string;
@@ -12,6 +14,7 @@ export function format(params: {
     ar: {},
     ur: {},
     tr: {},
+    in: {},
   }; // JSON模式使用对象进行存储
   let rawStr = frontEndJsTemplate; // JS模式使用模板进行替换
 
@@ -49,23 +52,28 @@ export function format(params: {
   ); // 各列有效单元格的数量
 
   // 判断各列语言出现数量,出现最多的列被判定为该语种翻译
-  const languageColumnIndex: Record<string, null | number> = {
-    ar: null,
-    ur: null,
-    zh: null,
-    en: null,
-    tr: null,
-  }; // 各语言对应列的index
-  const languageNumberStatistics: Record<string, number>[] = new Array(
+  const languageColumnStatistics: Record<
+    Langs,
+    { lineIndex: number; wordCounts: number }[]
+  > = {
+    ar: [],
+    ur: [],
+    zh: [],
+    en: [],
+    tr: [],
+    in: [],
+  }; // 各语言对应列的统计(数组格式，可能有多列符合，需要进行去重)
+  const languageNumberStatistics: Record<Langs, number>[] = new Array(
     columns.length,
   ); // 各列单元格语言出现数字统计
   for (let i = 0; i < languageNumberStatistics.length; i++) {
-    languageNumberStatistics[i] = { ar: 0, tr: 0, ur: 0, zh: 0, en: 0 };
+    languageNumberStatistics[i] = { ar: 0, tr: 0, ur: 0, zh: 0, en: 0, in: 0 };
   }
 
   for (let i = 0; i < columns.length; i++) {
     columns[i] = [];
   }
+  // 统计一列出现的各语言次数
   for (let row = 0; row < currentActiveSheet.length; row++) {
     for (let column = 0; column < currentActiveSheet[row].length; column++) {
       let value =
@@ -81,38 +89,80 @@ export function format(params: {
         else if (isUr(value)) languageNumberStatistics[column]['ur']++;
         else if (isAr(value)) languageNumberStatistics[column]['ar']++;
         else if (isZh(value)) languageNumberStatistics[column]['zh']++;
-        else if (isEn(value) && value !== '')
+        else if (isEn(value) && value !== '') {
           languageNumberStatistics[column]['en']++;
+          if (isLikeIn(value)) {
+            languageNumberStatistics[column]['in']++;
+          }
+        }
       } else {
         columns[column].push('');
       }
     }
   }
+  // console.log(columnsWordsStatistics, '列单词统计');
   // 如果某一列数据少于总数量的50%,判定为无效列,从数组去除
   const maxAvailableWords = Math.max.apply(null, columnsWordsStatistics); // 最大有效文本列数
   // 移除无效列
   for (let i = columnsWordsStatistics.length - 1; i >= 0; i--) {
     if (columnsWordsStatistics[i] < maxAvailableWords / 2) {
-      columns.splice(i, 1);
-      languageNumberStatistics.splice(i, 1);
+      columns.splice(i, 1); // 移除表格列数据
+      languageNumberStatistics.splice(i, 1); // 移除列统计数据
     }
   }
+  // console.log(languageNumberStatistics, '各列出现的单词数');
   // 判断各列对应语言
   for (let i = 0; i < languageNumberStatistics.length; i++) {
-    let lang = 'en',
+    let lang: Langs = 'en',
       maxCount = 0;
     Object.entries(languageNumberStatistics[i]).forEach(([key, value]) => {
+      // 印尼语直接推入数组，取最大值
+      if (key === 'in' && value > maxAvailableWords / 2) {
+        languageColumnStatistics['in'].push({
+          lineIndex: i,
+          wordCounts: value,
+        });
+        return;
+      }
+      // 其他列取出现次数最多的语种
       if (value > maxCount) {
         maxCount = value;
-        lang = key;
+        lang = key as Langs;
       }
     });
-    languageColumnIndex[lang] = i;
+    // 英语减去可能为印尼语的单词
+    if (lang === 'en') {
+      maxCount -= languageNumberStatistics[i]['in'];
+    }
+    languageColumnStatistics[lang].push({
+      lineIndex: i,
+      wordCounts: maxCount,
+    });
   }
+  // console.log(languageColumnStatistics, '嘻嘻嘻拉拉');
+
+  const languageColumnIndex: Record<Langs, number | null> = {
+    ar: null,
+    ur: null,
+    zh: null,
+    en: null,
+    tr: null,
+    in: null,
+  }; // 各语言对应的列的Index
+
+  // 取出对应语言匹配成功最多的一列作为目标语言列
+  Object.entries(languageColumnStatistics).forEach(([lang, columns]) => {
+    if (!columns.length) return;
+    columns.sort((a, b) => b.wordCounts - a.wordCounts);
+    languageColumnIndex[lang as Langs] = columns[0]['lineIndex'];
+  });
+
+  // console.log(languageColumnIndex, '?@');
+
   const result: Record<string, string[]> = {};
   Object.keys(languageColumnIndex).forEach((lang) => {
-    if (languageColumnIndex[lang] !== undefined) {
-      result[lang] = columns[languageColumnIndex[lang] as number];
+    if (languageColumnIndex[lang as Langs] !== undefined) {
+      result[lang] = columns[languageColumnIndex[lang as Langs] as number];
     }
   });
   // console.log(result, languageNumberStatistics);

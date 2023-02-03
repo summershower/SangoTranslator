@@ -1,3 +1,4 @@
+import { checkSpell } from './spell';
 const urReg = /[ٹھپھگھٹژڑپےڈگںچ]/g; // 乌尔都语独有而阿语没有的
 const arReg = /[ةكءهه]/g; // 阿语独有而乌尔都语没有的
 const zhReg = /[\u4e00-\u9fa5]/g; // 有任何一个汉字即可
@@ -21,4 +22,19 @@ export const isEn = (text: string): boolean => {
 
 export const isZh = (text: string): boolean => {
   return zhReg.test(text);
+};
+
+// 印尼语无法准确判断，只能依赖拼写进行检查
+export const isLikeIn = (text: string): boolean => {
+  const words = text
+    .replace(/[^a-zA-Z ]/gi, '')
+    .trim()
+    .split(' ');
+  let incorrectWords = 0;
+  words.forEach((v) => {
+    if (!checkSpell(v)) {
+      incorrectWords++;
+    }
+  });
+  return incorrectWords > words.length / 2;
 };

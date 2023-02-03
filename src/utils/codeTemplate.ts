@@ -18,4 +18,8 @@ export const lang_ur = {
 export const lang_tr = {
     <% tr %>
 }
+
+export const lang_in = {
+    <% in %>
+}
 `;

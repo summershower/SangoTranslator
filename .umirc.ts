@@ -106,6 +106,9 @@ export default defineConfig({
     {
       src: 'https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js',
     },
+    {
+      src: 'https://sango-frankfurt.oss-accelerate.aliyuncs.com/web/spellCheck/spell-0cb8acae9.js',
+    },
   ],
   // 部署Git Page相关配置
   base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
