@@ -6,11 +6,22 @@ const LangItem: React.FC<{
   zh: string;
   tr: string;
   en: string;
-  UILang: 'TR' | 'EN';
+  ind?: string;
+  UILang: 'TR' | 'EN' | 'IN';
   pageName: string;
   copyMode: 'TEMPLATE' | 'JS' | 'TEMPLATEJS';
   keywords?: string;
-}> = ({ keyName, zh, tr, en, UILang, pageName, copyMode, keywords = '' }) => {
+}> = ({
+  keyName,
+  zh,
+  tr,
+  en,
+  ind,
+  UILang,
+  pageName,
+  copyMode,
+  keywords = '',
+}) => {
   function handleCopy() {
     // 占位符检测
     const placeholderReg = /(?<={)[^{}]*(?=})/g;
@@ -64,7 +75,7 @@ const LangItem: React.FC<{
   return (
     <div className={styles.langItem} onClick={handleCopy}>
       <div className={styles.key} ref={langRef}>
-        {UILang === 'TR' ? tr : en}
+        {UILang === 'TR' ? tr : UILang === 'EN' ? en : ind}
       </div>
       <div className={styles.zh} ref={zhRef}>
         {zh}

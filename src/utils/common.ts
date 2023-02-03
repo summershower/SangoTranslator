@@ -64,6 +64,7 @@ export function JSToObject(rawStr: string): Promise<LangObject> {
           ar:{},
           ur:{},
           tr:{},
+          in:{},
         }
         const keys = Object.keys(lang_en);
         keys.forEach(key => {
@@ -72,6 +73,7 @@ export function JSToObject(rawStr: string): Promise<LangObject> {
           res['ar'][key] = lang_ar[key] || '';
           res['ur'][key] = lang_ur[key] || '';
           res['tr'][key] = lang_tr[key] || '';
+          res['in'][key] = lang_in[key] || '';
         })
         window.iframeGetObject(res);
        } catch(err) {

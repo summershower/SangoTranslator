@@ -18,7 +18,7 @@ const Dev: React.FC = () => {
   const [copyMode, setCopyMode] = useState<'TEMPLATE' | 'JS' | 'TEMPLATEJS'>(
     'TEMPLATE',
   );
-  const [UILang, setUILang] = useState<'TR' | 'EN'>('TR');
+  const [UILang, setUILang] = useState<'TR' | 'EN' | 'IN'>('TR');
   const [prefix, setPrefix] = useState('');
   const deferredLangObj = useDeferredValue(langObj);
   const searchRef = useRef(null);
@@ -31,7 +31,6 @@ const Dev: React.FC = () => {
       setLangObj(JSON.parse(targetSheet.json));
     } else if (targetSheet?.js) {
       JSToObject(targetSheet.js).then((res: LangObject) => {
-        console.log(res, '???');
         setLangObj(res);
       });
     }
@@ -61,7 +60,7 @@ const Dev: React.FC = () => {
     setCopyMode(e.target.value);
     setKeywords('');
   }
-  function handleChangeUILang(v: 'TR' | 'EN') {
+  function handleChangeUILang(v: 'TR' | 'EN' | 'IN') {
     setUILang(v);
     setKeywords('');
     saveSheetSettings(currentSheetId, 'UILang', v);
@@ -110,6 +109,7 @@ const Dev: React.FC = () => {
               options={[
                 { value: 'TR', label: 'TR' },
                 { value: 'EN', label: 'EN' },
+                { value: 'IN', label: 'IN' },
               ]}
             />
           </div>
@@ -146,7 +146,9 @@ const Dev: React.FC = () => {
               deferredLangObj?.['zh']?.[key]
                 ?.toLowerCase()
                 ?.includes(keywords.toLowerCase()) ||
-              deferredLangObj?.[UILang.toLowerCase() as 'en' | 'tr']?.[key]
+              deferredLangObj?.[UILang.toLowerCase() as 'en' | 'tr' | 'in']?.[
+                key
+              ]
                 ?.toLowerCase()
                 ?.includes(keywords.toLowerCase())
             );
@@ -158,6 +160,7 @@ const Dev: React.FC = () => {
                 zh={deferredLangObj?.['zh']?.[key] || ''}
                 en={deferredLangObj?.['en']?.[key] || ''}
                 tr={deferredLangObj?.['tr']?.[key] || ''}
+                ind={deferredLangObj?.['in']?.[key] || ''}
                 UILang={UILang}
                 copyMode={copyMode}
                 key={key}
