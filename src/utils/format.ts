@@ -245,7 +245,13 @@ export function format(params: {
       }
       key[i] = currentKey || '请替换' + i;
       // 追加JS模板
-      enStr += `${key[i]}: \`${result['en']?.[i] || ''}\`,`;
+      enStr += `${key[i]}: \`${
+        result['en']?.[i]
+          ? result['en'][i].endsWith('$')
+            ? result['en'][i] + '.'
+            : result['en'][i]
+          : ''
+      }\`,`;
       // 追加JSON对象
       JSONObject['en'][key[i]] = result['en']?.[i] || '';
     });
@@ -257,10 +263,16 @@ export function format(params: {
     if (!words) return (rawStr = rawStr.replace(`<% ${lang} %>`, ''));
     let langStr = '';
     for (let i = 0; i < key.length; i++) {
-      langStr += `${key[i]}: \`${words?.[i] || ''}\`,`;
-
-      JSONObject[lang][key[i]] = words?.[i] || '' || '';
+      langStr += `${key[i]}: \`${
+        words?.[i]
+          ? words[i].endsWith('$')
+            ? words[i] + (lang === 'zh' ? '。' : '.')
+            : words[i]
+          : ''
+      }\`,`;
+      JSONObject[lang][key[i]] = words?.[i] || '';
     }
+    console.log(langStr);
     rawStr = rawStr.replace(`<% ${lang} %>`, langStr);
   });
   // 格式化代码
