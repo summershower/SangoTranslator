@@ -62,7 +62,7 @@ const Dev: React.FC = () => {
   }
   function handleChangeUILang(v: 'TR' | 'EN' | 'IN') {
     setUILang(v);
-    // setKeywords('');
+    setKeywords('');
     saveSheetSettings(currentSheetId, 'UILang', v);
   }
   const copyModes = [
@@ -128,10 +128,10 @@ const Dev: React.FC = () => {
         <div className={styles.search}>
           <Search
             placeholder={`输入${UILang}/ZH进行检索`}
+            key={UILang}
             allowClear
             onChange={handleInputKeywords}
             enterButton
-            key={UILang + copyMode}
             ref={searchRef}
             style={{ width: 500 }}
           />
