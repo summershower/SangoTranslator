@@ -58,11 +58,11 @@ const Dev: React.FC = () => {
   }
   function handleChangeCopyMode(e: RadioChangeEvent) {
     setCopyMode(e.target.value);
-    setKeywords('');
+    // setKeywords('');
   }
   function handleChangeUILang(v: 'TR' | 'EN' | 'IN') {
     setUILang(v);
-    setKeywords('');
+    // setKeywords('');
     saveSheetSettings(currentSheetId, 'UILang', v);
   }
   const copyModes = [
