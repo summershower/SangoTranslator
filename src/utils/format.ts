@@ -216,6 +216,7 @@ export function format(params: {
               'is',
               'n',
               'a',
+              'and',
             ].includes(wordsArr[i].toLowerCase()) &&
               (currentKey.length + (wordsArr?.[i + 1]?.length || 0) > 21 ||
                 i === Math.min(6, wordsArr.length) - 1)) ||
