@@ -72,57 +72,54 @@ export default defineConfig({
   links: [
     // 引入luckysheet样式文件
     {
-      href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/css/pluginsCss.css',
+      href: '/css/pluginsCss.css',
       rel: 'stylesheet',
     },
     {
-      href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/plugins.css',
+      href: '/css/plugins.css',
       rel: 'stylesheet',
     },
     {
-      href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/css/luckysheet.css',
+      href: '/css/luckysheet.css',
       rel: 'stylesheet',
     },
     {
-      href: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/assets/iconfont/iconfont.css',
+      href: '/css/iconfont.css',
       rel: 'stylesheet',
     },
     //
     // 引入diff2html样式文件
     {
-      href: 'https://cdn.jsdelivr.net/npm/diff2html/bundles/css/diff2html.min.css',
+      href: '/css/diff2html.min.css',
       rel: 'stylesheet',
     },
   ],
   headScripts: [
     // 引入luckysheet文件，页面渲染后回立即创建表格，需要阻塞加载
     {
-      src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/plugins/js/plugin.js',
+      src: '/js/plugin.js',
     },
     {
-      src: 'https://cdn.jsdelivr.net/npm/luckysheet@latest/dist/luckysheet.umd.js',
+      src: '/js/luckysheet.umd.js',
     },
     // 引入diff2html文件
     {
-      src: 'https://cdn.jsdelivr.net/npm/diff2html/bundles/js/diff2html-ui.min.js',
-    },
-    {
-      src: 'https://sango-frankfurt.oss-accelerate.aliyuncs.com/web/spellCheck/spell-0cb8acae9.js',
+      src: '/js/diff2html-ui.min.js',
     },
   ],
   // 部署Git Page相关配置
-  base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
-  publicPath: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
-  outputPath: 'docs',
+  // base: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
+  // publicPath: process.env.NODE_ENV === 'production' ? '/SangoTranslator/' : '/',
+  // outputPath: 'docs',
   // Terser压缩默认打包es2015目标产物, lint模块需要使用更新的语法
   jsMinifierOptions: {
     target: ['es2019'],
   },
   // 解决Git page刷新404的问题
-  copy: [
-    {
-      from: '404.html',
-      to: 'docs/',
-    },
-  ],
+  // copy: [
+  //   {
+  //     from: '404.html',
+  //     to: 'docs/',
+  //   },
+  // ],
 });

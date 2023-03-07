@@ -5,7 +5,7 @@ export const getOSSConfig = () => {
   return request<{
     code: number;
     data: OSSConfig;
-  }>('https://gapi.meiqijiacheng.com/configure/getSTS?objectName=web', {
+  }>('/gapi/getSTS?objectName=web', {
     method: 'GET',
   });
 };
